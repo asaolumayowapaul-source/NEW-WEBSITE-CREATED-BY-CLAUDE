@@ -179,6 +179,13 @@ section{padding:88px 0; position:relative;}
   backdrop-filter:blur(14px);
   border-bottom:var(--border-soft);
 }
+.top-bar-link{
+  display:block; text-align:center; padding:9px 16px;
+  background:linear-gradient(90deg, var(--red), var(--red-glow));
+  color:var(--white); font-family:var(--font-mono); font-size:12.5px; font-weight:600;
+  letter-spacing:0.02em;
+}
+.top-bar-link:hover{ filter:brightness(1.08); }
 .topnav .container{display:flex; align-items:center; justify-content:space-between;}
 .brand{display:flex; align-items:center; gap:10px;}
 .brand-mark{
@@ -276,6 +283,30 @@ section{padding:88px 0; position:relative;}
   font-family:var(--font-mono); font-size:10px; color:var(--gray-dim);
   text-align:center; padding:8px; letter-spacing:0.02em; line-height:1.4;
 }
+.dangle-wa{
+  position:absolute; right:-10px; bottom:4px; z-index:3;
+  width:56px; height:56px; border-radius:50%;
+  background:#25D366; display:flex; align-items:center; justify-content:center;
+  box-shadow:0 6px 22px rgba(37,211,102,0.55);
+  transform-origin:top center;
+  animation:dangleSwing 2.6s ease-in-out infinite;
+}
+.dangle-wa .wa-ico{width:30px; height:30px; color:#fff;}
+@keyframes dangleSwing{ 0%,100%{transform:rotate(-6deg);} 50%{transform:rotate(6deg);} }
+.private-chat-callout{
+  position:absolute; top:-36px; right:-88px; width:140px;
+  text-align:left; pointer-events:none;
+}
+.private-chat-label{
+  font-family:var(--font-mono); font-size:11.5px; color:var(--green);
+  white-space:nowrap; display:block; margin-bottom:2px;
+}
+.private-chat-arrow{ width:50px; height:50px; color:var(--green); }
+@media (max-width:480px){
+  .private-chat-callout{ top:-28px; right:-64px; width:104px; }
+  .private-chat-label{ font-size:10px; }
+  .private-chat-arrow{ width:38px; height:38px; }
+}
 
 .hero-kicker{
   font-family:var(--font-mono); font-size:13.5px; letter-spacing:0.2em; text-transform:uppercase;
@@ -338,6 +369,7 @@ section{padding:88px 0; position:relative;}
   padding:9px 16px; border-radius:999px;
   background:linear-gradient(135deg, #25D366, #1fbf59); color:#052b0f;
   box-shadow:0 0 18px rgba(37,211,102,0.35); border:1px solid rgba(37,211,102,0.6);
+  cursor:pointer;
 }
 .btn-wa-nav:hover{ box-shadow:0 0 28px rgba(37,211,102,0.55);}
 .btn-wa-nav .wa-ico{width:15px; height:15px;}
@@ -496,6 +528,7 @@ section{padding:88px 0; position:relative;}
   width:56px; height:56px; border-radius:50%; z-index:60;
   background:#25D366; display:flex; align-items:center; justify-content:center;
   box-shadow:0 6px 24px rgba(37,211,102,0.4); transition:transform .2s;
+  border:none; cursor:pointer;
 }
 .fab-wa:hover{ transform:scale(1.08); }
 .fab-wa .wa-ico{ width:28px; height:28px; color:#fff; }
@@ -779,6 +812,11 @@ footer{ border-top:var(--border-soft); padding:56px 0 40px; }
 <div class="noise-bg"></div>
 <div class="glow-field"><div class="glow-orb red"></div><div class="glow-orb green"></div><div class="glow-orb violet"></div><div class="glow-orb amber"></div></div>
 
+<!-- ============ TOP ANNOUNCEMENT BAR ============ -->
+<a href="https://wa.link/11ja5d" target="_blank" rel="noopener" class="top-bar-link">
+  Want Private Whatsapp Chat with me? Click here →
+</a>
+
 <!-- ============ TOP NAV ============ -->
 <nav class="topnav">
   <div class="container">
@@ -794,10 +832,10 @@ footer{ border-top:var(--border-soft); padding:56px 0 40px; }
       <a href="blog.html">Blog</a>
     </div>
     <div style="display:flex; align-items:center; gap:10px;">
-      <a href="https://chat.whatsapp.com/CqNSeNqAsmPLM8qohMmarb?s=cl&p=a&mlu=4" target="_blank" rel="noopener" class="btn-wa-nav">
+      <button class="btn-wa-nav get-started" data-pkg="pkg-signal">
         <svg class="wa-ico" viewBox="0 0 24 24" fill="currentColor"><path d="M17.47 14.38c-.29-.15-1.7-.84-1.96-.93-.26-.1-.45-.15-.64.15-.19.29-.74.93-.9 1.12-.17.19-.33.22-.62.07-.29-.15-1.22-.45-2.32-1.44-.86-.76-1.44-1.71-1.6-2-.17-.29-.02-.45.13-.6.13-.13.29-.33.44-.5.15-.17.19-.29.29-.48.1-.19.05-.36-.02-.5-.07-.15-.64-1.55-.88-2.12-.23-.56-.47-.48-.64-.49-.17-.01-.36-.01-.55-.01-.19 0-.5.07-.76.36-.26.29-1 1-1 2.42s1.03 2.8 1.17 3c.15.19 2.03 3.1 4.92 4.35.69.3 1.22.48 1.64.61.69.22 1.31.19 1.81.11.55-.08 1.7-.7 1.94-1.37.24-.67.24-1.25.17-1.37-.07-.12-.26-.19-.55-.34z"/><path d="M12.02 2C6.5 2 2.02 6.48 2.02 12c0 1.85.5 3.58 1.36 5.07L2 22l5.06-1.33A9.95 9.95 0 0 0 12.02 22c5.52 0 10-4.48 10-10s-4.48-10-10-10zm0 18.15c-1.65 0-3.2-.44-4.53-1.22l-.32-.19-3 .79.8-2.93-.21-.3a8.15 8.15 0 0 1-1.26-4.3c0-4.5 3.66-8.16 8.16-8.16s8.16 3.66 8.16 8.16-3.66 8.15-8.16 8.15z"/></svg>
-        Join Free
-      </a>
+        Join Signal Group
+      </button>
       <a href="#packages" class="nav-cta">Explore Packages</a>
     </div>
   </div>
@@ -815,6 +853,13 @@ footer{ border-top:var(--border-soft); padding:56px 0 40px; }
           <div class="avatar-placeholder">YOUR<br>PHOTO<br>HERE</div>
         </div>
       </div>
+      <div class="private-chat-callout">
+        <span class="private-chat-label">Private chat?</span>
+        <svg class="private-chat-arrow" viewBox="0 0 60 60" fill="none"><path d="M4 4C6 24 14 40 34 48" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="4 5"/><path d="M27 43L34 48L31 39" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+      </div>
+      <a href="https://wa.link/11ja5d" target="_blank" rel="noopener" class="dangle-wa" aria-label="Private WhatsApp chat">
+        <svg class="wa-ico" viewBox="0 0 24 24" fill="currentColor"><path d="M17.47 14.38c-.29-.15-1.7-.84-1.96-.93-.26-.1-.45-.15-.64.15-.19.29-.74.93-.9 1.12-.17.19-.33.22-.62.07-.29-.15-1.22-.45-2.32-1.44-.86-.76-1.44-1.71-1.6-2-.17-.29-.02-.45.13-.6.13-.13.29-.33.44-.5.15-.17.19-.29.29-.48.1-.19.05-.36-.02-.5-.07-.15-.64-1.55-.88-2.12-.23-.56-.47-.48-.64-.49-.17-.01-.36-.01-.55-.01-.19 0-.5.07-.76.36-.26.29-1 1-1 2.42s1.03 2.8 1.17 3c.15.19 2.03 3.1 4.92 4.35.69.3 1.22.48 1.64.61.69.22 1.31.19 1.81.11.55-.08 1.7-.7 1.94-1.37.24-.67.24-1.25.17-1.37-.07-.12-.26-.19-.55-.34z"/><path d="M12.02 2C6.5 2 2.02 6.48 2.02 12c0 1.85.5 3.58 1.36 5.07L2 22l5.06-1.33A9.95 9.95 0 0 0 12.02 22c5.52 0 10-4.48 10-10s-4.48-10-10-10zm0 18.15c-1.65 0-3.2-.44-4.53-1.22l-.32-.19-3 .79.8-2.93-.21-.3a8.15 8.15 0 0 1-1.26-4.3c0-4.5 3.66-8.16 8.16-8.16s8.16 3.66 8.16 8.16-3.66 8.15-8.16 8.15z"/></svg>
+      </a>
     </div>
 
     <div class="hero-kicker">Web3 / DeFi Crypto Education &nbsp;<b>·</b>&nbsp; <span class="by-word">By</span> <span class="brand-word">AsaoluInfoTech</span></div>
@@ -826,18 +871,13 @@ footer{ border-top:var(--border-soft); padding:56px 0 40px; }
       <span class="fs-step">Learn</span><span class="fs-arrow">→</span>
       <span class="fs-step">Trade</span><span class="fs-arrow">→</span>
       <span class="fs-step">Get Signals</span><span class="fs-arrow">→</span>
-      <span class="fs-step hi">Join the Free Community</span>
+      <span class="fs-step hi">Join Wolfpack Protocol Signals</span>
     </div>
 
-    <a href="https://chat.whatsapp.com/CqNSeNqAsmPLM8qohMmarb?s=cl&p=a&mlu=4" target="_blank" rel="noopener" class="btn btn-wa btn-wa-lg">
+    <button class="btn btn-wa btn-wa-lg get-started" data-pkg="pkg-signal">
       <svg class="wa-ico" viewBox="0 0 24 24" fill="currentColor"><path d="M17.47 14.38c-.29-.15-1.7-.84-1.96-.93-.26-.1-.45-.15-.64.15-.19.29-.74.93-.9 1.12-.17.19-.33.22-.62.07-.29-.15-1.22-.45-2.32-1.44-.86-.76-1.44-1.71-1.6-2-.17-.29-.02-.45.13-.6.13-.13.29-.33.44-.5.15-.17.19-.29.29-.48.1-.19.05-.36-.02-.5-.07-.15-.64-1.55-.88-2.12-.23-.56-.47-.48-.64-.49-.17-.01-.36-.01-.55-.01-.19 0-.5.07-.76.36-.26.29-1 1-1 2.42s1.03 2.8 1.17 3c.15.19 2.03 3.1 4.92 4.35.69.3 1.22.48 1.64.61.69.22 1.31.19 1.81.11.55-.08 1.7-.7 1.94-1.37.24-.67.24-1.25.17-1.37-.07-.12-.26-.19-.55-.34z"/><path d="M12.02 2C6.5 2 2.02 6.48 2.02 12c0 1.85.5 3.58 1.36 5.07L2 22l5.06-1.33A9.95 9.95 0 0 0 12.02 22c5.52 0 10-4.48 10-10s-4.48-10-10-10zm0 18.15c-1.65 0-3.2-.44-4.53-1.22l-.32-.19-3 .79.8-2.93-.21-.3a8.15 8.15 0 0 1-1.26-4.3c0-4.5 3.66-8.16 8.16-8.16s8.16 3.66 8.16 8.16-3.66 8.15-8.16 8.15z"/></svg>
-      Join My Free Meme Raiders Signals
-    </a>
-
-    <div class="hero-ctas">
-      <a href="#packages" class="btn btn-primary">Explore Packages</a>
-      <a href="#pkg-signal" class="btn btn-secondary">Join Wolfpack</a>
-    </div>
+      Join WolfPack Protocol Signals Group
+    </button>
 
     <svg class="hero-chart" viewBox="0 0 640 70" preserveAspectRatio="none">
       <polyline points="0,50 40,42 80,55 120,30 160,38 200,20 240,34 280,15 320,28 360,10 400,24 440,8 480,20 520,6 560,18 600,4 640,14"
@@ -1063,12 +1103,12 @@ footer{ border-top:var(--border-soft); padding:56px 0 40px; }
       <div>
         <div class="eyebrow" style="justify-content:center;">Join The Wolfpack</div>
         <h4>Start learning. Discover opportunities. Grow your crypto knowledge.</h4>
-        <p>Join the free WhatsApp signal community — no payment required.</p>
+        <p>Join the WolfPack Protocol Signals Group.</p>
       </div>
-      <a href="https://chat.whatsapp.com/CqNSeNqAsmPLM8qohMmarb?s=cl&p=a&mlu=4" target="_blank" rel="noopener" class="btn btn-wa">
+      <button class="btn btn-wa get-started" data-pkg="pkg-signal">
         <svg class="wa-ico" viewBox="0 0 24 24" fill="currentColor"><path d="M17.47 14.38c-.29-.15-1.7-.84-1.96-.93-.26-.1-.45-.15-.64.15-.19.29-.74.93-.9 1.12-.17.19-.33.22-.62.07-.29-.15-1.22-.45-2.32-1.44-.86-.76-1.44-1.71-1.6-2-.17-.29-.02-.45.13-.6.13-.13.29-.33.44-.5.15-.17.19-.29.29-.48.1-.19.05-.36-.02-.5-.07-.15-.64-1.55-.88-2.12-.23-.56-.47-.48-.64-.49-.17-.01-.36-.01-.55-.01-.19 0-.5.07-.76.36-.26.29-1 1-1 2.42s1.03 2.8 1.17 3c.15.19 2.03 3.1 4.92 4.35.69.3 1.22.48 1.64.61.69.22 1.31.19 1.81.11.55-.08 1.7-.7 1.94-1.37.24-.67.24-1.25.17-1.37-.07-.12-.26-.19-.55-.34z"/><path d="M12.02 2C6.5 2 2.02 6.48 2.02 12c0 1.85.5 3.58 1.36 5.07L2 22l5.06-1.33A9.95 9.95 0 0 0 12.02 22c5.52 0 10-4.48 10-10s-4.48-10-10-10zm0 18.15c-1.65 0-3.2-.44-4.53-1.22l-.32-.19-3 .79.8-2.93-.21-.3a8.15 8.15 0 0 1-1.26-4.3c0-4.5 3.66-8.16 8.16-8.16s8.16 3.66 8.16 8.16-3.66 8.15-8.16 8.15z"/></svg>
-        Join Free
-      </a>
+        Join Signal Group
+      </button>
     </div>
   </div>
 </section>
@@ -1127,9 +1167,9 @@ footer{ border-top:var(--border-soft); padding:56px 0 40px; }
 </nav>
 
 <!-- ============ FLOATING WHATSAPP BUTTON ============ -->
-<a href="https://chat.whatsapp.com/CqNSeNqAsmPLM8qohMmarb?s=cl&p=a&mlu=4" target="_blank" rel="noopener" class="fab-wa" aria-label="Contact on WhatsApp">
+<button class="fab-wa get-started" data-pkg="pkg-signal" aria-label="Join Signal Group">
   <svg class="wa-ico" viewBox="0 0 24 24" fill="currentColor"><path d="M17.47 14.38c-.29-.15-1.7-.84-1.96-.93-.26-.1-.45-.15-.64.15-.19.29-.74.93-.9 1.12-.17.19-.33.22-.62.07-.29-.15-1.22-.45-2.32-1.44-.86-.76-1.44-1.71-1.6-2-.17-.29-.02-.45.13-.6.13-.13.29-.33.44-.5.15-.17.19-.29.29-.48.1-.19.05-.36-.02-.5-.07-.15-.64-1.55-.88-2.12-.23-.56-.47-.48-.64-.49-.17-.01-.36-.01-.55-.01-.19 0-.5.07-.76.36-.26.29-1 1-1 2.42s1.03 2.8 1.17 3c.15.19 2.03 3.1 4.92 4.35.69.3 1.22.48 1.64.61.69.22 1.31.19 1.81.11.55-.08 1.7-.7 1.94-1.37.24-.67.24-1.25.17-1.37-.07-.12-.26-.19-.55-.34z"/><path d="M12.02 2C6.5 2 2.02 6.48 2.02 12c0 1.85.5 3.58 1.36 5.07L2 22l5.06-1.33A9.95 9.95 0 0 0 12.02 22c5.52 0 10-4.48 10-10s-4.48-10-10-10zm0 18.15c-1.65 0-3.2-.44-4.53-1.22l-.32-.19-3 .79.8-2.93-.21-.3a8.15 8.15 0 0 1-1.26-4.3c0-4.5 3.66-8.16 8.16-8.16s8.16 3.66 8.16 8.16-3.66 8.15-8.16 8.15z"/></svg>
-</a>
+</button>
 
 <!-- ============ CHECKOUT MODAL ============ -->
 <div class="modal-overlay" id="checkout-overlay">
@@ -1215,7 +1255,7 @@ function waLink(prefillText){
 const PACKAGES = [
   {
     id: "pkg-signal", icon:"🐺", name:"Wolfpack Protocol Signal Group", tag:"Private community",
-    price:100, prominent:true, badge:"Most Popular",
+    price:70, prominent:true, badge:"Most Popular",
     desc:"Join the private meme-token trading community and receive trading setups, market observations and token opportunities.",
     learn:["Meme-token trading setups","Token opportunity alerts","Market analysis","Entry and exit planning","Risk-management guidance","Community discussion","Practical trading education"],
     button:"Join Wolfpack"
@@ -1236,7 +1276,7 @@ const PACKAGES = [
   },
   {
     id: "pkg-memetrading", icon:"🚀", name:"Learn Meme Token Trading — Beginner to Pro", tag:"Meme tokens",
-    price:30,
+    price:50,
     desc:"Learn how to research, analyze, screen, and trade meme tokens from beginner level to advanced strategies.",
     learn:["Meme token fundamentals","Screening and research tools","Chart and volume analysis","Entry and exit strategies","Avoiding rug pulls and scams","Position sizing and risk management","Beginner to advanced trading workflow"],
     button:"Learn Meme Token Trading"
