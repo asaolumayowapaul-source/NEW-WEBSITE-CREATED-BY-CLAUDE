@@ -549,7 +549,7 @@ section{padding:88px 0; position:relative;}
   border:var(--border-red);
   display:flex; flex-direction:column; gap:18px;
   transition:transform .25s, box-shadow .25s, border-color .25s;
-  overflow:hidden;
+  overflow:visible;
 }
 .pkg-card::before{
   content:''; position:absolute; inset:0; border-radius:inherit; padding:1px;
@@ -948,7 +948,7 @@ footer{ border-top:var(--border-soft); padding:56px 0 40px; }
         <h4>I Want to Trade</h4>
         <p>Understand trading and market analysis.</p>
       </a>
-      <a href="#pkg-signal" class="path-card glass reveal">
+      <a href="#pkg-memetrading" class="path-card glass reveal">
         <span class="fico">🐸</span>
         <h4>I Want to Trade Meme Tokens</h4>
         <p>Analyze meme-token opportunities and risks.</p>
@@ -963,7 +963,7 @@ footer{ border-top:var(--border-soft); padding:56px 0 40px; }
         <h4>I Want to Automate Liquidity</h4>
         <p>Manage and automate liquidity positions.</p>
       </a>
-      <a href="#packages" class="path-card glass reveal">
+      <a href="#pkg-prediction" class="path-card glass reveal">
         <span class="fico">🎯</span>
         <h4>Prediction Market Strategies</h4>
         <p>How prediction markets work — and how to analyze them.</p>
@@ -979,6 +979,36 @@ footer{ border-top:var(--border-soft); padding:56px 0 40px; }
     <h2 class="section-title">Choose Your Path</h2>
     <p class="section-sub">Every package is a standalone track. Combine as many as you need — there's no forced bundle.</p>
     <div class="pkg-grid" id="pkg-grid"></div>
+  </div>
+</section>
+
+<!-- ============ NOT SURE WHICH ONE? ============ -->
+<section style="padding-top:0;">
+  <div class="container">
+    <div class="quickstart glass reveal">
+      <div>
+        <h4>Not sure which one to choose?</h4>
+        <p>Start with Weekly Alpha if you want fewer, carefully selected setups at a low entry price. Choose the Signal Group if you want full, high-frequency access to more setups as they arise.</p>
+      </div>
+      <div class="qs-row">
+        <button class="qs-btn get-started" data-pkg="pkg-weekly-alpha">Start With $10</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ READY FOR MORE? ============ -->
+<section style="padding-top:0;">
+  <div class="container">
+    <div class="quickstart glass reveal">
+      <div>
+        <h4>Ready for more?</h4>
+        <p>After experiencing Weekly Alpha, you can upgrade to the full Signal Group for high-frequency access to our trading opportunities — whenever you're ready, no pressure.</p>
+      </div>
+      <div class="qs-row">
+        <button class="qs-btn get-started" data-pkg="pkg-signal">Upgrade to Signal Group</button>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -1254,9 +1284,17 @@ function waLink(prefillText){
    ================================================================ */
 const PACKAGES = [
   {
+    id: "pkg-weekly-alpha", icon:"🌙", name:"WolfPack Weekly Alpha", tag:"Less noise. More selectivity.",
+    price:10, badge:"Entry Level",
+    checkoutNote:"$10 — One-time payment — 2 months access. Not recurring, no auto-renewal.",
+    desc:"1 carefully selected crypto trading signal per week for 2 months — one-time payment, no recurring billing. We don't trade every opportunity. We wait for the opportunity worth taking.",
+    learn:["1 selective signal every week","2 months of access","Entry price","Take-profit levels","Stop-loss / risk-management info","Built for people who don't want frequent signals","$10 one-time payment — not recurring"],
+    button:"Join Weekly Alpha"
+  },
+  {
     id: "pkg-signal", icon:"🐺", name:"Wolfpack Protocol Signal Group", tag:"Private community",
-    price:70, prominent:true, badge:"Most Popular",
-    desc:"Join the private meme-token trading community and receive trading setups, market observations and token opportunities.",
+    price:70, prominent:true, badge:"Full Access",
+    desc:"Join the private meme-token trading community for full, high-frequency access to trading setups, market observations and token opportunities as they arise — not just one pick a week.",
     learn:["Meme-token trading setups","Token opportunity alerts","Market analysis","Entry and exit planning","Risk-management guidance","Community discussion","Practical trading education"],
     button:"Join Wolfpack"
   },
@@ -1431,8 +1469,9 @@ document.addEventListener('click', (e)=>{
 });
 
 function pkgSummaryHTML(){
+  const note = currentPkg.checkoutNote ? `<div class="small-note" style="margin-top:8px;">${currentPkg.checkoutNote}</div>` : '';
   return `<div class="summary-box">
-    <div><div class="sname">${currentPkg.icon} ${currentPkg.name}</div></div>
+    <div><div class="sname">${currentPkg.icon} ${currentPkg.name}</div>${note}</div>
     <div class="sprice">$${currentPkg.price}</div>
   </div>`;
 }
