@@ -919,7 +919,7 @@ footer{ border-top:var(--border-soft); padding:56px 0 40px; }
     <h2 class="section-title">Find Your Crypto Path</h2>
     <p class="section-sub">Not sure where to start? Choose your goal.</p>
     <div class="path-grid">
-      <a href="#pkg-mentorship" class="path-card glass reveal">
+      <a href="#pkg-investing" class="path-card glass reveal">
         <span class="fico">🟢</span>
         <h4>I'm New to Crypto</h4>
         <p>Learn the fundamentals.</p>
@@ -1280,13 +1280,6 @@ const PACKAGES = [
     button:"Join Wolfpack"
   },
   {
-    id: "pkg-mentorship", icon:"🧠", name:"Learn Crypto One-on-One", tag:"Private mentorship",
-    price:40,
-    desc:"Private one-on-one crypto learning designed for people who want personalized guidance.",
-    learn:["Crypto fundamentals","How wallets work","How to buy and sell crypto","Spot trading","Futures trading fundamentals","Meme-token trading","Token research","Liquidity and DeFi","Risk management","Identifying trading opportunities","Practical use of crypto research tools"],
-    button:"Start One-on-One"
-  },
-  {
     id: "pkg-liquidity", icon:"💧", name:"Learn Liquidity Provision — Automation & Manual Methods", tag:"DeFi",
     price:50,
     desc:"Learn how to provide liquidity in DeFi using both manual and automated strategies, understand liquidity pools, manage positions, and automate your liquidity provision.",
@@ -1334,6 +1327,14 @@ const PACKAGES = [
     desc:"Fundamentals for researching and allocating into crypto with discipline.",
     learn:["Crypto investing fundamentals","How to research projects","Tokenomics","Market capitalization","Liquidity","Fundamental analysis","Risk assessment","Portfolio allocation","Long-term vs short-term approaches","Common crypto investment mistakes"],
     button:"Learn Crypto Investing"
+  },
+  {
+    id: "pkg-devmasterclass", icon:"🛠️", name:"WolfPack Meme Token Dev Masterclass", tag:"Learn the Tools, Strategies & Systems Smart Meme Token Developers Use",
+    price:100, badge:"Premium",
+    desc:"A complete meme token developer training and smart toolkit walkthrough — not just \"access to a platform.\" Learn how meme tokens are launched and managed, and how the right tools (token creation, multi sender, batch collection, auto sell, auto transfer, creator rewards, batch claim, auto volume, hosted auto freeze, pump launch & graduation buy) give developers an operational edge. Education, tools and workflows — market results depend on execution and market conditions, not guarantees.",
+    learn:["Complete Meme Token Developer training","Smart Developer Platform walkthrough","Token creation training","Token distribution strategies","Multi-wallet operations","Advanced tool walkthroughs (Auto Sell, Auto Transfer, Creator Rewards, Auto Volume Bot, Hosted Auto Freeze)","Automation workflows for repetitive dev tasks","Meme token launch framework","Developer checklist","Risk & security education","Practical demonstrations","Lifetime access to purchased training materials, where technically supported"],
+    checkoutNote:"Risk Disclaimer: Meme tokens and cryptocurrency markets are highly speculative and can result in substantial losses. This program is educational and does not guarantee profits, token success, trading volume, price appreciation, or financial returns. Students are responsible for their own decisions and should comply with applicable laws and platform rules.",
+    button:"Join The Wolfpack"
   }
 ];
 
@@ -1342,8 +1343,7 @@ const FAQS = [
   ["How do I pay?", "You can pay using Naira or USDT on the Solana network."],
   ["How do I confirm my payment?", "Submit your payment details and receipt, then use the unlocked WhatsApp button to send your confirmation."],
   ["Is profit guaranteed?", "No. Crypto trading and investing involve significant risk. Educational material does not guarantee profits."],
-  ["Can I buy more than one package?", "Yes."],
-  ["Can I get one-on-one mentorship?", "Yes. Select the One-on-One Crypto Mentorship package."]
+  ["Can I buy more than one package?", "Yes."]
 ];
 
 /* ================================================================
