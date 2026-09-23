@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Liquidity Provision for Beginners — AsaoluInfotech</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#0B0715;
+  --surface:#161029;
+  --surface-2:#1E1738;
+  --border:#332957;
+  --mint:#3ED9A0;
+  --mint-soft:rgba(62,217,160,0.12);
+  --gold:#D9B76A;
+  --violet:#8C6BFF;
+  --violet-glow:rgba(140,107,255,0.28);
+  --text:#F6F3FF;
+  --text-dim:#B7AED6;
+  --text-faint:#8A80AE;
+  --warn:#FF7A7A;
+  --warn-bg:rgba(255,122,122,0.08);
+  --warn-border:rgba(255,122,122,0.35);
+  --tip-border:rgba(62,217,160,0.35);
+  --wa:#25D366;
+  --font-display:'Space Grotesk',system-ui,sans-serif;
+  --font-body:'Inter',system-ui,sans-serif;
+  --safe-t:env(safe-area-inset-top,0px);
+  --safe-b:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;}
+html{scroll-padding-top:var(--safe-t);}
+html,body{height:100%;}
+body{
+  margin:0; background:var(--void); color:var(--text); font-family:var(--font-body);
+  -webkit-font-smoothing:antialiased; overflow:hidden;
+}
+body::before{
+  content:""; position:fixed; inset:0;
+  background:
+    radial-gradient(700px 500px at 15% -5%, var(--violet-glow), transparent 60%),
+    radial-gradient(600px 500px at 110% 15%, rgba(62,217,160,0.10), transparent 55%),
+    radial-gradient(800px 600px at 50% 120%, rgba(140,107,255,0.14), transparent 60%);
+  pointer-events:none; z-index:0;
+}
+h1,h2,h3,h4{font-family:var(--font-display);font-weight:600;margin:0;letter-spacing:-0.01em;}
+p{margin:0 0 16px 0;}
+a{color:var(--mint);}
+
+#app{position:relative; z-index:1; height:100%; display:flex; flex-direction:column;}
+.topbar{
+  padding:calc(12px + var(--safe-t)) 16px 12px; display:flex; align-items:center; gap:12px; flex-shrink:0;
+  background:linear-gradient(to bottom, rgba(11,7,21,0.92), rgba(11,7,21,0.7)); backdrop-filter:blur(10px);
+  position:relative; z-index:30;
+}
+.brand-mini{font-family:var(--font-display); font-size:13px; font-weight:600; color:var(--text-dim); white-space:nowrap; flex-shrink:0;}
+.brand-mini b{color:var(--mint); font-weight:600;}
+.progress-track{flex:1; height:5px; background:var(--surface-2); border-radius:99px; overflow:hidden;}
+.progress-fill{height:100%; width:0%; background:linear-gradient(90deg,var(--violet),var(--mint)); border-radius:99px; transition:width .35s ease;}
+.menu-btn{
+  flex-shrink:0; width:38px; height:38px; border-radius:11px; background:var(--surface-2); border:1px solid var(--border);
+  display:flex; align-items:center; justify-content:center; color:var(--text); cursor:pointer;
+}
+.menu-btn svg{width:18px; height:18px;}
+
+main{flex:1; overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; scroll-behavior:smooth;}
+.page{
+  min-height:100%; padding:28px 22px 48px; display:flex; flex-direction:column; justify-content:center;
+  max-width:640px; margin:0 auto; animation:fadein .4s ease both;
+}
+@keyframes fadein{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+@media (prefers-reduced-motion:reduce){.page{animation:none;}}
+
+.footer-nav{
+  flex-shrink:0; display:flex; align-items:center; gap:10px; padding:12px 16px calc(12px + var(--safe-b));
+  background:linear-gradient(to top, rgba(11,7,21,0.95), rgba(11,7,21,0.75)); backdrop-filter:blur(10px);
+  border-top:1px solid var(--border); position:relative; z-index:30;
+}
+.nav-btn{
+  flex:1; padding:13px 14px; border-radius:13px; border:1px solid var(--border); background:var(--surface-2);
+  color:var(--text); font-family:var(--font-body); font-size:15px; font-weight:600;
+  display:flex; align-items:center; justify-content:center; gap:6px; cursor:pointer; -webkit-tap-highlight-color:transparent;
+}
+.nav-btn.primary{background:linear-gradient(135deg,var(--violet),#6C4FE0); border-color:transparent; color:#fff;}
+.nav-btn:disabled{opacity:0.35; pointer-events:none;}
+.nav-count{flex-shrink:0; font-size:13px; color:var(--text-faint); min-width:52px; text-align:center;}
+
+.scrim{position:fixed; inset:0; background:rgba(0,0,0,0.55); opacity:0; pointer-events:none; transition:opacity .25s ease; z-index:40;}
+.scrim.open{opacity:1; pointer-events:auto;}
+.drawer{
+  position:fixed; top:0; right:0; bottom:0; width:min(340px,86vw); background:var(--surface);
+  border-left:1px solid var(--border); z-index:50; transform:translateX(100%);
+  transition:transform .3s cubic-bezier(.2,.8,.2,1); display:flex; flex-direction:column;
+  padding-top:var(--safe-t); padding-bottom:var(--safe-b);
+}
+.drawer.open{transform:translateX(0);}
+.drawer-head{padding:20px 18px 12px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border);}
+.drawer-head h3{font-size:17px;}
+.drawer-close{
+  width:32px; height:32px; border-radius:9px; background:var(--surface-2); border:1px solid var(--border);
+  color:var(--text); display:flex; align-items:center; justify-content:center; cursor:pointer;
+}
+.drawer-list{overflow-y:auto; padding:10px 8px 24px;}
+.drawer-section-label{font-size:11px; letter-spacing:0.06em; color:var(--text-faint); padding:14px 12px 6px; font-weight:600;}
+.drawer-item{width:100%; text-align:left; padding:10px 12px; border-radius:10px; background:transparent; border:none; color:var(--text-dim); font-family:var(--font-body); font-size:14.5px; cursor:pointer; display:block;}
+.drawer-item.active{background:var(--mint-soft); color:var(--mint); font-weight:600;}
+.drawer-item:active{background:var(--surface-2);}
+
+.kicker{font-size:13px; color:var(--mint); font-weight:600; margin-bottom:10px;}
+.chapter-num{font-family:var(--font-display); font-size:15px; color:var(--text-faint); margin-bottom:6px;}
+h1.title{font-size:28px; line-height:1.22; margin-bottom:14px;}
+h2.title{font-size:25px; line-height:1.24; margin-bottom:14px;}
+.lede{font-size:18px; line-height:1.62; color:var(--text-dim); margin-bottom:18px;}
+.body-text{font-size:17.5px; line-height:1.7; color:var(--text);}
+.body-text strong{color:var(--mint); font-weight:700;}
+.body-text b{color:#fff;}
+ul.list, ol.list{padding-left:22px; margin:0 0 18px;}
+.list li{font-size:17px; line-height:1.62; margin-bottom:10px; color:var(--text);}
+
+.callout{border-radius:16px; padding:18px; margin:18px 0; border:1px solid var(--border); background:var(--surface-2);}
+.callout.tip{border-color:var(--tip-border); background:var(--mint-soft);}
+.callout.warn{border-color:var(--warn-border); background:var(--warn-bg);}
+.callout-label{font-size:13px; font-weight:700; margin-bottom:6px; display:flex; align-items:center; gap:7px;}
+.callout.tip .callout-label{color:var(--mint);}
+.callout.warn .callout-label{color:var(--warn);}
+.callout p{font-size:16px; line-height:1.6; color:var(--text-dim); margin-bottom:8px;}
+.callout p:last-child{margin-bottom:0;}
+
+.analogy{border-left:3px solid var(--violet); padding:4px 0 4px 16px; margin:18px 0; font-size:17px; line-height:1.62; color:var(--text-dim);}
+.analogy b{color:var(--text);}
+
+.term-card{background:var(--surface-2); border:1px solid var(--border); border-radius:16px; padding:16px 18px; margin-bottom:14px;}
+.term-card h4{font-family:var(--font-display); font-size:18px; color:var(--gold); margin-bottom:8px;}
+.term-row{margin-bottom:6px;}
+.term-row:last-child{margin-bottom:0;}
+.term-label{font-size:11.5px; font-weight:700; color:var(--text-faint); letter-spacing:0.03em; margin-bottom:2px;}
+.term-value{font-size:15px; line-height:1.55; color:var(--text-dim);}
+
+.divider-page{align-items:center; text-align:center;}
+.divider-tag{font-family:var(--font-display); font-size:13px; color:var(--text-faint); margin-bottom:14px; letter-spacing:0.05em;}
+.divider-num{
+  font-family:var(--font-display); font-size:56px; font-weight:700;
+  background:linear-gradient(135deg,var(--mint),var(--violet)); -webkit-background-clip:text; background-clip:text; color:transparent;
+  line-height:1; margin-bottom:18px;
+}
+.divider-title{font-size:26px; margin-bottom:14px;}
+.divider-sub{font-size:16.5px; color:var(--text-dim); line-height:1.6; max-width:420px; margin:0 auto;}
+
+.cover-page{align-items:center; text-align:center; justify-content:center;}
+.cover-badge{display:inline-flex; align-items:center; gap:8px; padding:8px 16px; border-radius:99px; background:var(--surface-2); border:1px solid var(--border); font-size:12px; color:var(--text-dim); margin-bottom:26px;}
+.cover-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--mint);}
+.cover-title{font-family:var(--font-display); font-size:34px; line-height:1.1; font-weight:700; margin-bottom:10px;}
+.cover-title span{background:linear-gradient(135deg,var(--mint),var(--violet)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.cover-subtitle{font-size:15.5px; color:var(--gold); font-weight:600; margin-bottom:26px;}
+.cover-sub{font-size:17px; color:var(--text-dim); line-height:1.55; max-width:420px; margin:0 auto 28px;}
+.cover-divider{width:56px; height:2px; background:var(--gold); margin:0 auto 24px; opacity:0.7;}
+.cover-brand{font-family:var(--font-display); font-size:15px; font-weight:600; color:#fff; margin-bottom:4px;}
+.cover-role{font-size:13px; color:var(--text-faint); margin-bottom:28px;}
+.cover-start{
+  margin-top:6px; display:inline-flex; align-items:center; gap:8px; padding:15px 26px; border-radius:14px;
+  background:linear-gradient(135deg,var(--violet),#6C4FE0); color:#fff; font-weight:700; font-size:16px;
+  cursor:pointer; border:none; font-family:var(--font-body);
+}
+.cover-foot{margin-top:34px; font-size:12.5px; color:var(--text-faint);}
+
+.checklist-item{
+  display:flex; align-items:flex-start; gap:12px; padding:13px 14px; border-radius:13px; background:var(--surface-2);
+  border:1px solid var(--border); margin-bottom:9px; cursor:pointer; -webkit-tap-highlight-color:transparent;
+}
+.checklist-item.checked{border-color:var(--tip-border); background:var(--mint-soft);}
+.check-box{flex-shrink:0; width:22px; height:22px; border-radius:7px; border:2px solid var(--text-faint); display:flex; align-items:center; justify-content:center; margin-top:1px;}
+.checklist-item.checked .check-box{background:var(--mint); border-color:var(--mint);}
+.check-box svg{width:13px; height:13px; opacity:0; color:#0B0715;}
+.checklist-item.checked .check-box svg{opacity:1;}
+.checklist-item span{font-size:15.5px; line-height:1.5; color:var(--text-dim);}
+.checklist-item.checked span{color:var(--text);}
+.checklist-progress{font-size:14px; color:var(--text-faint); margin-bottom:16px;}
+
+.brand-footer{margin-top:30px; padding-top:18px; border-top:1px solid var(--border); font-size:12px; color:var(--text-faint); text-align:center;}
+.brand-footer b{color:var(--text-dim);}
+
+/* video buttons */
+.video-btn{
+  display:flex; align-items:center; gap:12px; padding:16px 18px; border-radius:16px; margin:18px 0 6px;
+  background:linear-gradient(135deg, rgba(62,217,160,0.16), rgba(140,107,255,0.12)); border:1px solid var(--tip-border);
+  color:var(--text); font-weight:700; font-size:15.5px; cursor:pointer;
+}
+.video-btn .play-ico{
+  flex-shrink:0; width:38px; height:38px; border-radius:50%; background:var(--mint); color:#06110C;
+  display:flex; align-items:center; justify-content:center; font-size:16px;
+}
+.video-btn.disabled{
+  background:var(--surface-2); border:1px dashed var(--border); color:var(--text-faint); cursor:default;
+}
+.video-btn.disabled .play-ico{background:var(--surface); color:var(--text-faint);}
+.video-note{font-size:14px; color:var(--text-dim); line-height:1.55; margin-bottom:6px;}
+.pending-note{font-size:12.5px; color:var(--text-faint); font-style:italic; margin-bottom:18px;}
+
+/* comparison table */
+.compare-table{width:100%; border-collapse:separate; border-spacing:0; margin:18px 0; font-size:14.5px;}
+.compare-table th{
+  font-family:var(--font-display); font-size:13px; text-transform:uppercase; letter-spacing:0.04em; color:var(--void);
+  background:var(--mint); padding:10px 12px; text-align:left;
+}
+.compare-table th:first-child{border-radius:12px 0 0 0;}
+.compare-table th:last-child{border-radius:0 12px 0 0;}
+.compare-table td{padding:11px 12px; border-bottom:1px solid var(--border); color:var(--text-dim); background:var(--surface-2); vertical-align:top;}
+.compare-table tr:last-child td{border-bottom:none;}
+.compare-table tr:last-child td:first-child{border-radius:0 0 0 12px;}
+.compare-table tr:last-child td:last-child{border-radius:0 0 12px 0;}
+
+/* roadmap */
+.day-card{display:flex; gap:14px; padding:14px 0; border-bottom:1px solid var(--border);}
+.day-card:last-child{border-bottom:none;}
+.day-tag{
+  flex-shrink:0; width:64px; height:34px; border-radius:9px; background:var(--surface-2); border:1px solid var(--border);
+  display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-weight:700; font-size:13px; color:var(--gold);
+}
+.day-card p{margin-bottom:0; font-size:15.5px; color:var(--text-dim);}
+
+@media (min-width:520px){
+  .cover-title{font-size:42px;}
+  h1.title{font-size:32px;}
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="topbar">
+    <div class="brand-mini"><b>Liquidity</b> Provision 101</div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <button class="menu-btn" id="menuBtn" aria-label="Open contents">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+    </button>
+  </div>
+
+  <main id="main"><div id="pageContainer"></div></main>
+
+  <div class="footer-nav">
+    <button class="nav-btn" id="prevBtn">← Back</button>
+    <div class="nav-count" id="navCount">1 / 1</div>
+    <button class="nav-btn primary" id="nextBtn">Next →</button>
+  </div>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-head">
+    <h3>Contents</h3>
+    <button class="drawer-close" id="drawerClose" aria-label="Close">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="6" y1="18" x2="18" y2="6"/></svg>
+    </button>
+  </div>
+  <div class="drawer-list" id="drawerList"></div>
+</div>
+
+<script>
+function term(name,meaning,example){
+  return `<div class="term-card">
+    <h4>${name}</h4>
+    <div class="term-row"><div class="term-label">SIMPLE MEANING</div><div class="term-value">${meaning}</div></div>
+    <div class="term-row"><div class="term-label">EXAMPLE</div><div class="term-value">${example}</div></div>
+  </div>`;
+}
+function footerBrand(){ return `<div class="brand-footer">AsaoluInfotech <b>|</b> Crypto Coach • Analyst • Strategist</div>`; }
+function checkItem(text){
+  return `<div class="checklist-item" data-c="1"><div class="check-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div><span>${text}</span></div>`;
+}
+function videoBtn(label, url, note){
+  if(url){
+    return `<a class="video-btn" href="${url}" target="_blank" rel="noopener"><span class="play-ico">▶</span> ${label}</a><p class="video-note">${note}</p>`;
+  }
+  return `<div class="video-btn disabled"><span class="play-ico">▶</span> ${label}</div><p class="video-note">${note}</p><p class="pending-note">Video link coming soon — your coach will add this shortly.</p>`;
+}
+function divider(num,tag,title,sub){
+  return `<div class="page divider-page">
+    <div class="divider-tag">${tag}</div>
+    <div class="divider-num">${num}</div>
+    <h2 class="divider-title">${title}</h2>
+    <p class="divider-sub">${sub}</p>
+  </div>`;
+}
+
+const pages = [];
+
+/* ---- COVER ---- */
+pages.push({type:'cover', navTitle:'Cover', section:'Start', html:`
+<div class="page cover-page">
+  <div class="cover-badge"><span class="dot"></span> Read this before the practical videos</div>
+  <h1 class="cover-title">LIQUIDITY PROVISION<br><span>FOR BEGINNERS</span></h1>
+  <div class="cover-subtitle">From Manual LP to Automated DeFi Strategies</div>
+  <div class="cover-divider"></div>
+  <div class="cover-brand">Created by AsaoluInfotech</div>
+  <div class="cover-role">Crypto Coach · Analyst · Strategist</div>
+  <button class="cover-start" id="coverStart">Start Here →</button>
+  <div class="cover-foot">Best experienced on your phone · Read fully before the video lessons</div>
+</div>`});
+
+/* ---- WELCOME ---- */
+pages.push({type:'content', navTitle:'Welcome', section:'Start', html:`
+<div class="page">
+  <div class="kicker">A note from your coach</div>
+  <h1 class="title">Welcome, Let's Get You Started</h1>
+  <p class="lede">This ebook is your foundation before you touch the practical videos.</p>
+  <p class="body-text">Liquidity provision can sound intimidating the first time you hear about it — pools, ranges, vaults, automation. It's really not as complicated as it sounds once you understand the basic idea.</p>
+  <p class="body-text">Go through this ebook <b>in order</b>. Each section builds on the one before it. Once you've gone through the concepts here, use the <b>practical video buttons</b> later in this book to actually follow along on each platform.</p>
+  <div class="analogy">Think of this book as the map, and the videos as the actual journey. Read the map first so the journey makes sense.</div>
+  ${footerBrand()}
+</div>`});
+
+/* ---- DISCLAIMER ---- */
+pages.push({type:'content', navTitle:'Disclaimer', section:'Start', html:`
+<div class="page">
+  <div class="kicker">Before we begin</div>
+  <h1 class="title">An Honest Disclaimer</h1>
+  <div class="callout warn">
+    <div class="callout-label">⚠ Please read this first</div>
+    <p>This ebook is <b>educational material</b>, not financial advice. Liquidity provision involves real financial risk, including the possibility of <b>losing money</b>.</p>
+    <p>Risks you should understand before providing any liquidity include:</p>
+    <p><b>Impermanent loss</b> · <b>Smart-contract risk</b> · <b>Token price volatility</b> · <b>Liquidity risk</b> · <b>Protocol/platform risk</b> · <b>Fees and transaction costs</b> · <b>Automated strategy risk</b></p>
+  </div>
+  <p class="body-text">Nothing in this book guarantees profit, a specific return, or that any strategy — manual or automated — will be safe. Please only ever provide liquidity with money you can afford to lose, and always do your own research.</p>
+  ${footerBrand()}
+</div>`});
+
+/* ---- SECTION 1 divider ---- */
+pages.push({type:'content', navTitle:'Section 1', section:'Section 1 — What Is Liquidity Provision?', html:
+  divider('01','SECTION 1','What Is Liquidity Provision?','The basic idea behind every liquidity pool, explained with a simple everyday example.')});
+
+pages.push({type:'content', navTitle:'What Is Liquidity Provision?', section:'Section 1 — What Is Liquidity Provision?', html:`
+<div class="page">
+  <div class="chapter-num">Chapter</div>
+  <h1 class="title">What Is Liquidity Provision?</h1>
+  <p class="lede"><b>Liquidity provision simply means putting your tokens into a liquidity pool so other people can trade using that pool.</b> In return, you may receive a share of the trading fees, depending on the protocol and pool.</p>
+  <div class="analogy">Think of a busy marketplace. For people to buy and sell quickly, there needs to be enough stock (liquidity) sitting there ready to trade. A <b>liquidity pool</b> is that stock — except instead of one shop owner supplying it, many individual people (liquidity providers) contribute tokens to the pool together.</div>
+  <p class="body-text">Decentralized exchanges (DEXs) don't work like a normal stock exchange, matching one buyer to one seller. Instead, they use these pools — a smart contract holding two tokens (a "pair," like ETH and USDC) — and traders swap directly against the pool.</p>
+  <p class="body-text">Every time someone swaps, they pay a small trading fee. That fee doesn't go to a company — it's shared among everyone who contributed tokens to that pool. That's how <b>liquidity providers (LPs)</b> earn.</p>
+  <div class="callout tip">
+    <div class="callout-label">💡 Simple example — ETH/USDC</div>
+    <p>Imagine a pool holding ETH and USDC. If someone swaps their USDC for ETH, they pay a small fee on that swap. As a liquidity provider in that pool, you receive a share of that fee — proportional to how much of the pool you provided.</p>
+  </div>
+  ${footerBrand()}
+</div>`});
+
+/* ---- SECTION 2 divider — Glossary ---- */
+pages.push({type:'content', navTitle:'Section 2', section:'Section 2 — LP Terms & Jargon', html:
+  divider('02','SECTION 2','LP Terms & Jargon','Your quick-reference glossary. Skim it now, and come back whenever a video mentions a word you\'ve forgotten.')});
+
+pages.push({type:'content', navTitle:'Pools & Positions', section:'Section 2 — LP Terms & Jargon', html:`
+<div class="page">
+  <div class="kicker">Glossary · Part 1 of 3</div>
+  <h2 class="title">Pools & Positions</h2>
+  ${term('Liquidity','Tokens made available so others can trade against them.','You deposit ETH and USDC into a pool.')}
+  ${term('Liquidity Pool (Pool)','A smart contract holding a pair of tokens that traders swap against.','An ETH/USDC pool on a DEX.')}
+  ${term('Liquidity Provider (LP)','Anyone who deposits tokens into a pool.','You, once you deposit into a pool.')}
+  ${term('LP Position (Position)','Your specific share/stake inside a pool.','Your 0.5% share of an ETH/USDC pool.')}
+  ${term('Token Pair (Pair)','The two tokens that make up a pool.','ETH/USDC, SOL/USDC.')}
+  ${term('Deposit','Adding your tokens into a pool.','Depositing 1 ETH + equivalent USDC.')}
+  ${term('Withdraw','Removing your tokens (and any earned fees) from a pool.','Withdrawing your LP position back to your wallet.')}
+  ${term('Trading Fees (Pool Fees)','The small fee charged on every swap, shared among LPs.','A 0.3% fee on every swap in the pool.')}
+  ${footerBrand()}
+</div>`});
+
+pages.push({type:'content', navTitle:'Ranges & Returns', section:'Section 2 — LP Terms & Jargon', html:`
+<div class="page">
+  <div class="kicker">Glossary · Part 2 of 3</div>
+  <h2 class="title">Ranges & Returns</h2>
+  ${term('Price Range (Range)','The price band within which your liquidity is actively earning fees.','Setting your ETH/USDC range between $2,800–$3,200.')}
+  ${term('Concentrated Liquidity','Providing liquidity only within a specific price range, instead of the full range.','Focusing your liquidity tightly around the current price.')}
+  ${term('Full-Range Liquidity','Providing liquidity across the entire possible price range.','A simpler, more hands-off approach than concentrated ranges.')}
+  ${term('Out of Range','When the current price moves outside your chosen range, and your position stops earning fees.','Price rises above your range\'s upper limit.')}
+  ${term('APR (Annual Percentage Rate)','The yearly return rate, without compounding.','A pool advertising 15% APR.')}
+  ${term('APY (Annual Percentage Yield)','The yearly return rate including compounding.','A vault advertising 20% APY.')}
+  ${term('TVL (Total Value Locked)','The total value currently deposited in a pool or protocol.','A pool with $2 million TVL.')}
+  ${term('Volume','How much has been traded through a pool over a period, usually 24 hours.','$500,000 in daily swap volume.')}
+  ${footerBrand()}
+</div>`});
+
+pages.push({type:'content', navTitle:'Risk & Automation Terms', section:'Section 2 — LP Terms & Jargon', html:`
+<div class="page">
+  <div class="kicker">Glossary · Part 3 of 3</div>
+  <h2 class="title">Risk & Automation Terms</h2>
+  ${term('Impermanent Loss','A risk where the value of your deposited tokens changes compared to just holding them, because of price movement.','ETH rises sharply while it\'s in your pool — you may end up with less value than if you\'d simply held ETH.')}
+  ${term('Slippage','The difference between the expected price of a swap and the actual price received.','Expecting $100 but receiving $98 worth of tokens.')}
+  ${term('Swap','Exchanging one token for another through a pool.','Swapping USDC for ETH.')}
+  ${term('DEX (Decentralized Exchange)','A trading platform that runs on smart contracts and liquidity pools, not a company order book.','Platforms like Meteora, Orca, and Krystal.')}
+  ${term('Smart Contract','Self-running code on a blockchain that holds and manages the pool.','The code that actually holds your deposited tokens.')}
+  ${term('Gas Fee / Network Fee','The cost paid to the network to process your transaction.','A small SOL fee to add liquidity.')}
+  ${term('Rebalancing','Adjusting a position — like moving your price range — to match the current market.','Moving your range after the price shifts significantly.')}
+  ${term('Farming / Yield / Liquidity Mining','Earning rewards (fees and/or extra tokens) by providing liquidity or staking LP tokens.','Depositing into a pool and additionally earning a reward token.')}
+  ${term('Auto Farm / Vault','A system that automatically manages a liquidity strategy on your behalf, based on preset rules.','Depositing into a vault instead of managing your own range manually.')}
+  ${term('Strategy','The specific rules a vault or automated system follows.','A strategy that automatically rebalances your range every few hours.')}
+  ${term('Protocol','The platform/application running the pools and smart contracts.','Meteora, Orca, Krystal and MaxFi are all protocols.')}
+  ${footerBrand()}
+</div>`});
+
+/* ---- SECTION 3 divider — Manual LP ---- */
+pages.push({type:'content', navTitle:'Section 3', section:'Section 3 — Manual Liquidity Provision', html:
+  divider('03','SECTION 3','Manual Liquidity Provision','You manage the position yourself — here\'s the general process.')});
+
+pages.push({type:'content', navTitle:'How Manual LP Works', section:'Section 3 — Manual Liquidity Provision', html:`
+<div class="page">
+  <div class="chapter-num">Chapter</div>
+  <h1 class="title">How Manual Liquidity Provision Works</h1>
+  <p class="lede">Manual LP means <b>you</b> personally choose the pool, set the range, and monitor the position — nothing runs automatically for you.</p>
+  <p class="body-text">The general process, step by step (the exact screens differ slightly between protocols, but the steps stay the same):</p>
+  <ol class="list">
+    <li>Connect your wallet</li>
+    <li>Select a protocol (e.g. Meteora, Orca, Krystal)</li>
+    <li>Choose a liquidity pool</li>
+    <li>Understand the pool — the pair, fees, volume, TVL</li>
+    <li>Choose the amount to provide</li>
+    <li>Choose the appropriate range, where applicable</li>
+    <li>Review fees and risks before confirming anything</li>
+    <li>Approve your tokens (a wallet permission step)</li>
+    <li>Add liquidity</li>
+    <li>Confirm the transaction</li>
+    <li>Monitor your position over time</li>
+    <li>Collect or reinvest fees, where applicable</li>
+    <li>Withdraw liquidity whenever you're ready</li>
+  </ol>
+  <p class="body-text">Watch the practical tutorials later in this book to see this exact flow on each specific platform.</p>
+  ${footerBrand()}
+</div>`});
+
+pages.push({type:'content', navTitle:'Manual LP Checklist', section:'Section 3 — Manual Liquidity Provision', html:`
+<div class="page">
+  <div class="chapter-num">Chapter</div>
+  <h1 class="title">Manual LP Checklist</h1>
+  <p class="lede">Go through this before you enter any pool — every time, no exceptions.</p>
+  <ul class="list">
+    <li>Do I understand both tokens in this pair?</li>
+    <li>Have I checked the pool's TVL and volume?</li>
+    <li>Do I understand the fee tier?</li>
+    <li>Have I thought about impermanent loss for this specific pair?</li>
+    <li>Have I chosen a sensible price range (if applicable)?</li>
+    <li>Am I only using money I can afford to lose?</li>
+    <li>Do I know how to monitor and withdraw this position later?</li>
+  </ul>
+  <div class="callout tip">
+    <div class="callout-label">💡 Beginner tip</div>
+    <p>Start with a small amount on a pool you already understand well, before trying anything larger or more complex.</p>
+  </div>
+  ${footerBrand()}
+</div>`});
+
+/* ---- SECTION 4 divider — Automated LP ---- */
+pages.push({type:'content', navTitle:'Section 4', section:'Section 4 — Automated Liquidity Provision', html:
+  divider('04','SECTION 4','Automated Liquidity Provision','Letting a system help manage the position — and why that still isn\'t risk-free.')});
+
+pages.push({type:'content', navTitle:'Manual vs Automated', section:'Section 4 — Automated Liquidity Provision', html:`
+<div class="page">
+  <div class="chapter-num">Chapter</div>
+  <h1 class="title">What Does "Automated" Actually Mean?</h1>
+  <p class="lede">Automation just means a <b>predefined strategy, vault, bot, or smart-contract system</b> helps execute or manage certain actions for you, according to its own rules.</p>
+  <div class="analogy">Think of manual LP like driving a car yourself — you decide every turn. Automated LP is closer to cruise control — it handles a specific part of the driving for you, based on settings you chose, but you still need to understand the road and pay attention.</div>
+  <p class="body-text">People automate because managing a position manually — watching prices, adjusting ranges, reinvesting fees — takes real time and attention. An automated strategy can handle some of that repetitive work.</p>
+  <div class="callout warn">
+    <div class="callout-label">⚠ Automation does not remove risk</div>
+    <p>A vault or auto-farm still carries every risk a manual position carries — impermanent loss, smart-contract risk, volatility — plus the added risk of trusting the strategy's own rules and code. <b>You must understand what a strategy actually does before depositing into it.</b></p>
+  </div>
+  ${footerBrand()}
+</div>`});
+
+/* ---- SECTION 5 divider — Evaluating Opportunities ---- */
+pages.push({type:'content', navTitle:'Section 5', section:'Section 5 — Evaluating an LP Opportunity', html:
+  divider('05','SECTION 5','Evaluating an LP Opportunity','A high APR is not automatically a safer — or better — opportunity.')});
+
+pages.push({type:'content', navTitle:'The Evaluation Checklist', section:'Section 5 — Evaluating an LP Opportunity', html:`
+<div class="page">
+  <div class="chapter-num">Chapter</div>
+  <h1 class="title">How to Evaluate Any LP Opportunity</h1>
+  <p class="lede">Before providing liquidity anywhere — manual or automated — check these:</p>
+  <ul class="list">
+    <li><b>TVL</b> — how much is already deposited</li>
+    <li><b>Trading volume</b> — is the pool actually being used</li>
+    <li><b>Fees</b> — what fee tier does the pool charge</li>
+    <li><b>APR / APY</b> — and where that yield is actually coming from</li>
+    <li><b>Token volatility</b> — how much do these tokens move</li>
+    <li><b>Pool composition</b> — which two tokens, and how they relate</li>
+    <li><b>Liquidity range</b> — how tight or wide, if applicable</li>
+    <li><b>Recent price movement</b> — is the pair trending strongly</li>
+    <li><b>Impermanent loss risk</b> — specific to this pair</li>
+    <li><b>Protocol reputation</b> — how established and trusted it is</li>
+    <li><b>Smart-contract risk</b> — has it been audited</li>
+    <li><b>Strategy rules</b> — if it's automated, what exactly does it do</li>
+    <li><b>Gas / network costs</b> — will fees eat into small positions</li>
+  </ul>
+  <div class="callout warn">
+    <div class="callout-label">⚠ Important</div>
+    <p>A very high APR is often a sign of very high risk or high volatility — not a safer opportunity. Always ask <i>why</i> the yield is that high before depositing.</p>
+  </div>
+  ${footerBrand()}
+</div>`});
+
+/* ---- SECTION 6 divider — Practical Videos ---- */
+pages.push({type:'content', navTitle:'Section 6', section:'Section 6 — Practical Video Lessons', html:
+  divider('06','SECTION 6','Practical Video Lessons','Watch each tutorial while following along with the concepts from this book.')});
+
+pages.push({type:'content', navTitle:'Meteora Tutorial', section:'Section 6 — Practical Video Lessons', html:`
+<div class="page">
+  <div class="chapter-num">Practical Lesson 1</div>
+  <h1 class="title">How to Provide Liquidity on Meteora</h1>
+  <p class="lede">Step-by-step</p>
+  ${videoBtn('WATCH METEORA TUTORIAL', null, "This practical tutorial shows you how to navigate Meteora and provide liquidity step-by-step. Watch the video while following the written concepts in this ebook.")}
+  ${footerBrand()}
+</div>`});
+
+pages.push({type:'content', navTitle:'Orca Tutorial', section:'Section 6 — Practical Video Lessons', html:`
+<div class="page">
+  <div class="chapter-num">Practical Lesson 2</div>
+  <h1 class="title">How to Provide Liquidity on Orca</h1>
+  <p class="lede">Step-by-step</p>
+  ${videoBtn('WATCH ORCA TUTORIAL', null, "A detailed practical walkthrough showing you how to provide liquidity on Orca.")}
+  ${footerBrand()}
+</div>`});
+
+pages.push({type:'content', navTitle:'Krystal Intro & LP', section:'Section 6 — Practical Video Lessons', html:`
+<div class="page">
+  <div class="chapter-num">Practical Lesson 3 — Video 1</div>
+  <h1 class="title">Krystal Introduction + How to Provide Liquidity</h1>
+  ${videoBtn('WATCH KRYSTAL INTRO & LP TUTORIAL', null, "This video introduces you to Krystal, shows you how to navigate the platform, and demonstrates how to provide liquidity.")}
+  ${footerBrand()}
+</div>`});
+
+pages.push({type:'content', navTitle:'Krystal Advanced', section:'Section 6 — Practical Video Lessons', html:`
+<div class="page">
+  <div class="chapter-num">Practical Lesson 3 — Video 2</div>
+  <h1 class="title">Krystal: Copy Top LP Strategies + Create Your Own Auto-Farm Vault</h1>
+  ${videoBtn('WATCH KRYSTAL ADVANCED TUTORIAL', 'https://drive.google.com/file/d/1L8mbzyUU3wsS52Demc33Ff7QX30VjpZB/view?usp=drivesdk', "This practical lesson teaches you how to identify and copy top liquidity providers' strategies, how the strategy works, how to create your own auto-farm vault, how to configure it, how automation works, how to monitor the strategy, and the important risks and considerations.")}
+  ${footerBrand()}
+</div>`});
+
+pages.push({type:'content', navTitle:'MaxFi Tutorial', section:'Section 6 — Practical Video Lessons', html:`
+<div class="page">
+  <div class="chapter-num">Practical Lesson 4</div>
+  <h1 class="title">How to Provide Liquidity on MaxFi + Automation</h1>
+  ${videoBtn('WATCH MAXFI TUTORIAL', 'https://drive.google.com/file/d/16d-fFJ1fSLkF9ztz9zBeWYVVZY2mht2Y/view?usp=drivesdk', "This video demonstrates how to provide liquidity on MaxFi, how the platform works, and how to automate the process where applicable.")}
+  ${footerBrand()}
+</div>`});
+
+pages.push({type:'content', navTitle:'More Platforms', section:'Section 6 — Practical Video Lessons', html:`
+<div class="page">
+  <div class="chapter-num">Practical Lesson 5</div>
+  <h1 class="title">More Platforms</h1>
+  <p class="lede">More practical tutorials will be added here as they become available.</p>
+  ${videoBtn('WATCH PRACTICAL TUTORIAL', null, "Platform name and lesson details will appear here once added.")}
+  ${footerBrand()}
+</div>`});
+
+/* ---- SECTION 7 divider — Krystal Masterclass ---- */
+pages.push({type:'content', navTitle:'Section 7', section:'Section 7 — Krystal Automation Masterclass', html:
+  divider('07','SECTION 7','Krystal Automation Masterclass','A special deep-dive, since Krystal automation is a core part of this course.')});
+
+pages.push({type:'content', navTitle:'The Krystal Learning Path', section:'Section 7 — Krystal Automation Masterclass', html:`
+<div class="page">
+  <div class="chapter-num">Learning path</div>
+  <h1 class="title">Your Krystal Automation Learning Path</h1>
+  <ol class="list">
+    <li><b>Understand Krystal</b> — what the platform is and how it fits into DeFi.</li>
+    <li><b>Understand liquidity provision on Krystal</b> — the basic manual flow.</li>
+    <li><b>Understand how top LP strategies can be followed or copied</b>, where supported.</li>
+    <li><b>Understand what an automated vault is</b> on Krystal specifically.</li>
+    <li><b>Understand the strategy parameters</b> — what each setting actually controls.</li>
+    <li><b>Create your own auto-farm vault.</b></li>
+    <li><b>Monitor the strategy</b> — what to watch for over time.</li>
+    <li><b>Understand when and why</b> you may need to modify, pause, or exit the strategy.</li>
+  </ol>
+  <div class="callout tip">
+    <div class="callout-label">💡 How to use this section</div>
+    <p>Watch the two Krystal videos in Section 6 while following this 8-step path — that's exactly the order they were designed to be learned in.</p>
+  </div>
+  ${footerBrand()}
+</div>`});
+
+/* ---- SECTION 8 divider — Manual vs Automated ---- */
+pages.push({type:'content', navTitle:'Section 8', section:'Section 8 — Manual vs Automated LP', html:
+  divider('08','SECTION 8','Manual vs Automated LP','Side by side — so the difference is crystal clear.')});
+
+pages.push({type:'content', navTitle:'Comparison Table', section:'Section 8 — Manual vs Automated LP', html:`
+<div class="page">
+  <div class="chapter-num">At a glance</div>
+  <h1 class="title">Manual LP vs Automated LP</h1>
+  <table class="compare-table">
+    <tr><th>Manual LP</th><th>Automated LP</th></tr>
+    <tr><td>User manages the position</td><td>Strategy/system helps manage the position</td></tr>
+    <tr><td>Requires regular monitoring</td><td>Can reduce manual monitoring</td></tr>
+    <tr><td>User makes each decision</td><td>Predefined rules execute actions</td></tr>
+    <tr><td>More hands-on</td><td>More hands-off</td></tr>
+    <tr><td>Still carries risk</td><td>Still carries risk</td></tr>
+  </table>
+  <div class="callout warn">
+    <div class="callout-label">⚠ Important note</div>
+    <p>Automation does not mean guaranteed profit. It only changes <i>who</i> — or what — is executing the actions.</p>
+  </div>
+  ${footerBrand()}
+</div>`});
+
+/* ---- SECTION 9 divider — Mistakes ---- */
+pages.push({type:'content', navTitle:'Section 9', section:'Section 9 — Common Beginner Mistakes', html:
+  divider('09','SECTION 9','Common Beginner Mistakes','Learn from these before they cost you money.')});
+
+pages.push({type:'content', navTitle:'Mistakes to Avoid', section:'Section 9 — Common Beginner Mistakes', html:`
+<div class="page">
+  <div class="chapter-num">Chapter</div>
+  <h1 class="title">Common Beginner Mistakes</h1>
+  <ul class="list">
+    <li>Providing liquidity without understanding the pool</li>
+    <li>Looking only at APR and nothing else</li>
+    <li>Ignoring impermanent loss</li>
+    <li>Ignoring token volatility</li>
+    <li>Depositing too much money too soon</li>
+    <li>Not understanding price ranges</li>
+    <li>Not checking fees before entering</li>
+    <li>Not understanding a strategy before using automation</li>
+    <li>Assuming automation means no risk</li>
+    <li>Connecting a wallet to unknown websites</li>
+    <li>Approving transactions without reading them</li>
+    <li>Forgetting about gas/network fees</li>
+    <li>Not monitoring automated positions at all</li>
+  </ul>
+  ${footerBrand()}
+</div>`});
+
+/* ---- SECTION 10 divider — Action Plan ---- */
+pages.push({type:'content', navTitle:'Section 10', section:'Section 10 — Beginner Action Plan', html:
+  divider('10','SECTION 10','Your Beginner Action Plan','An 8-day roadmap through everything in this book.')});
+
+pages.push({type:'content', navTitle:'8-Day Roadmap', section:'Section 10 — Beginner Action Plan', html:`
+<div class="page">
+  <div class="chapter-num">Roadmap</div>
+  <h1 class="title">Your 8-Day Action Plan</h1>
+  <div class="day-card"><div class="day-tag">DAY 1</div><p>Understand liquidity provision.</p></div>
+  <div class="day-card"><div class="day-tag">DAY 2</div><p>Learn the terminology.</p></div>
+  <div class="day-card"><div class="day-tag">DAY 3</div><p>Understand manual LP.</p></div>
+  <div class="day-card"><div class="day-tag">DAY 4</div><p>Watch the Meteora practical tutorial.</p></div>
+  <div class="day-card"><div class="day-tag">DAY 5</div><p>Watch the Orca practical tutorial.</p></div>
+  <div class="day-card"><div class="day-tag">DAY 6</div><p>Learn Krystal.</p></div>
+  <div class="day-card"><div class="day-tag">DAY 7</div><p>Learn Krystal automation.</p></div>
+  <div class="day-card"><div class="day-tag">DAY 8</div><p>Learn MaxFi.</p></div>
+  <div class="callout tip" style="margin-top:22px;">
+    <div class="callout-label">💡 After Day 8</div>
+    <p>Practice with small amounts you can afford to lose while you keep learning. There's no rush.</p>
+  </div>
+  ${footerBrand()}
+</div>`});
+
+/* ---- Final Checklist ---- */
+const finalChecklist = [
+  'I understand what liquidity provision means.',
+  'I understand liquidity pools.',
+  'I understand LP fees.',
+  'I understand impermanent loss.',
+  'I understand concentrated liquidity.',
+  'I know how to provide liquidity manually.',
+  'I know how to evaluate a pool.',
+  'I understand automated LP.',
+  'I understand what an auto-farm/vault does.',
+  'I understand the risks.',
+  'I have watched the practical tutorials.',
+  'I am ready to practice carefully.'
+];
+pages.push({type:'checklist', navTitle:'Final Checklist', section:'Finish', html:`
+<div class="page">
+  <div class="kicker">Final check-in</div>
+  <h1 class="title">Final Checklist</h1>
+  <p class="lede">Before you start practicing, see how comfortable you feel with these ideas.</p>
+  <div class="checklist-progress" id="checklistProgress">0 of ${finalChecklist.length} checked</div>
+  <div id="checklistWrap">${finalChecklist.map(checkItem).join('')}</div>
+  <div class="callout tip">
+    <div class="callout-label">💡 Remember</div>
+    <p>If you can't confidently check some of these yet, go back to the relevant section. The goal is <b>understanding</b>, not memorization.</p>
+  </div>
+  ${footerBrand()}
+</div>`});
+
+/* ---- Closing ---- */
+pages.push({type:'content', navTitle:"You're Ready", section:'Finish', html:`
+<div class="page divider-page">
+  <div class="divider-tag">YOU MADE IT</div>
+  <div class="divider-num" style="font-size:40px;">✓</div>
+  <h2 class="divider-title">You've Built Your LP Foundation</h2>
+  <p class="divider-sub">You now understand how liquidity provision works, manually and automated — enough to follow the practical videos with confidence. Come back to the glossary any time a term slips your mind.</p>
+  <div class="cover-divider" style="margin-top:30px;"></div>
+  <div class="cover-brand">AsaoluInfotech</div>
+  <div class="cover-role">Crypto Coach · Analyst · Strategist</div>
+</div>`});
+
+/* ============ RENDER ENGINE ============ */
+let current = 0;
+const container = document.getElementById('pageContainer');
+const mainEl = document.getElementById('main');
+const progressFill = document.getElementById('progressFill');
+const navCount = document.getElementById('navCount');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+
+function render(idx){
+  current = idx;
+  const p = pages[idx];
+  container.innerHTML = p.html;
+  mainEl.scrollTop = 0;
+  const pct = Math.round(((idx) / (pages.length-1)) * 100);
+  progressFill.style.width = pct + '%';
+  navCount.textContent = (idx+1) + ' / ' + pages.length;
+  prevBtn.disabled = idx === 0;
+  nextBtn.textContent = idx === pages.length-1 ? 'Finish' : 'Next →';
+  nextBtn.disabled = idx === pages.length-1;
+  updateActiveDrawerItem();
+  if(document.getElementById('coverStart')){
+    document.getElementById('coverStart').addEventListener('click', ()=>goTo(current+1));
+  }
+  if(p.type === 'checklist'){ setupChecklist(); }
+}
+function goTo(idx){ if(idx < 0 || idx >= pages.length) return; render(idx); }
+
+prevBtn.addEventListener('click', ()=>goTo(current-1));
+nextBtn.addEventListener('click', ()=>goTo(current+1));
+document.addEventListener('keydown', (e)=>{
+  if(e.key === 'ArrowRight') goTo(current+1);
+  if(e.key === 'ArrowLeft') goTo(current-1);
+});
+
+function setupChecklist(){
+  const wrap = document.getElementById('checklistWrap');
+  if(!wrap) return;
+  const items = wrap.querySelectorAll('.checklist-item');
+  let saved = {};
+  try{ saved = JSON.parse(localStorage.getItem('lp_checklist')||'{}'); }catch(e){ saved = {}; }
+  items.forEach((el,i)=>{
+    if(saved[i]) el.classList.add('checked');
+    el.addEventListener('click', ()=>{
+      el.classList.toggle('checked');
+      saved[i] = el.classList.contains('checked');
+      try{ localStorage.setItem('lp_checklist', JSON.stringify(saved)); }catch(e){}
+      updateChecklistProgress();
+    });
+  });
+  updateChecklistProgress();
+}
+function updateChecklistProgress(){
+  const wrap = document.getElementById('checklistWrap');
+  const label = document.getElementById('checklistProgress');
+  if(!wrap || !label) return;
+  const total = wrap.querySelectorAll('.checklist-item').length;
+  const checked = wrap.querySelectorAll('.checklist-item.checked').length;
+  label.textContent = checked + ' of ' + total + ' checked';
+}
+
+const drawer = document.getElementById('drawer');
+const scrim = document.getElementById('scrim');
+const drawerList = document.getElementById('drawerList');
+const menuBtn = document.getElementById('menuBtn');
+const drawerClose = document.getElementById('drawerClose');
+
+function buildDrawer(){
+  let lastSection = null;
+  let html = '';
+  pages.forEach((p,i)=>{
+    if(p.section !== lastSection){
+      html += `<div class="drawer-section-label">${p.section}</div>`;
+      lastSection = p.section;
+    }
+    html += `<button class="drawer-item" data-idx="${i}">${p.navTitle}</button>`;
+  });
+  drawerList.innerHTML = html;
+  drawerList.querySelectorAll('.drawer-item').forEach(btn=>{
+    btn.addEventListener('click', ()=>{ goTo(parseInt(btn.dataset.idx,10)); closeDrawer(); });
+  });
+}
+function updateActiveDrawerItem(){
+  drawerList.querySelectorAll('.drawer-item').forEach(btn=>{
+    btn.classList.toggle('active', parseInt(btn.dataset.idx,10) === current);
+  });
+}
+function openDrawer(){ drawer.classList.add('open'); scrim.classList.add('open'); }
+function closeDrawer(){ drawer.classList.remove('open'); scrim.classList.remove('open'); }
+menuBtn.addEventListener('click', openDrawer);
+drawerClose.addEventListener('click', closeDrawer);
+scrim.addEventListener('click', closeDrawer);
+
+buildDrawer();
+render(0);
+</script>
+</body>
+</html>
