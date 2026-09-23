@@ -1,0 +1,1194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Crypto for Beginners — AsaoluInfotech</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#0B0715;
+  --surface:#161029;
+  --surface-2:#1E1738;
+  --surface-3:#261D47;
+  --border:#332957;
+  --mint:#3ED9A0;
+  --mint-soft:rgba(62,217,160,0.12);
+  --gold:#D9B76A;
+  --violet:#8C6BFF;
+  --violet-glow:rgba(140,107,255,0.28);
+  --text:#F6F3FF;
+  --text-dim:#B7AED6;
+  --text-faint:#8A80AE;
+  --warn:#FF7A7A;
+  --warn-bg:rgba(255,122,122,0.08);
+  --warn-border:rgba(255,122,122,0.35);
+  --tip-border:rgba(62,217,160,0.35);
+  --font-display:'Space Grotesk',system-ui,sans-serif;
+  --font-body:'Inter',system-ui,sans-serif;
+  --safe-t:env(safe-area-inset-top,0px);
+  --safe-b:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;}
+html{scroll-padding-top:var(--safe-t);}
+html,body{height:100%;}
+body{
+  margin:0;
+  background:var(--void);
+  color:var(--text);
+  font-family:var(--font-body);
+  -webkit-font-smoothing:antialiased;
+  overflow:hidden;
+}
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(700px 500px at 15% -5%, var(--violet-glow), transparent 60%),
+    radial-gradient(600px 500px at 110% 15%, rgba(62,217,160,0.10), transparent 55%),
+    radial-gradient(800px 600px at 50% 120%, rgba(140,107,255,0.14), transparent 60%);
+  pointer-events:none;
+  z-index:0;
+}
+h1,h2,h3,h4{font-family:var(--font-display);font-weight:600;margin:0;letter-spacing:-0.01em;}
+p{margin:0 0 16px 0;}
+a{color:var(--mint);}
+
+/* ---------- App shell ---------- */
+#app{
+  position:relative;
+  z-index:1;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+}
+.topbar{
+  padding:calc(12px + var(--safe-t)) 16px 12px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  flex-shrink:0;
+  background:linear-gradient(to bottom, rgba(11,7,21,0.92), rgba(11,7,21,0.7));
+  backdrop-filter:blur(10px);
+  position:relative;
+  z-index:30;
+}
+.brand-mini{
+  font-family:var(--font-display);
+  font-size:14px;
+  font-weight:600;
+  color:var(--text-dim);
+  white-space:nowrap;
+  flex-shrink:0;
+}
+.brand-mini b{color:var(--mint);font-weight:600;}
+.progress-track{
+  flex:1;
+  height:5px;
+  background:var(--surface-2);
+  border-radius:99px;
+  overflow:hidden;
+}
+.progress-fill{
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,var(--violet),var(--mint));
+  border-radius:99px;
+  transition:width .35s ease;
+}
+.menu-btn{
+  flex-shrink:0;
+  width:38px;height:38px;
+  border-radius:11px;
+  background:var(--surface-2);
+  border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--text);
+  cursor:pointer;
+}
+.menu-btn svg{width:18px;height:18px;}
+
+main{
+  flex:1;
+  overflow-y:auto;
+  overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;
+  scroll-behavior:smooth;
+}
+.page{
+  min-height:100%;
+  padding:28px 22px 48px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  max-width:640px;
+  margin:0 auto;
+  animation:fadein .4s ease both;
+}
+@keyframes fadein{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+@media (prefers-reduced-motion:reduce){.page{animation:none;}}
+
+.footer-nav{
+  flex-shrink:0;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:12px 16px calc(12px + var(--safe-b));
+  background:linear-gradient(to top, rgba(11,7,21,0.95), rgba(11,7,21,0.75));
+  backdrop-filter:blur(10px);
+  border-top:1px solid var(--border);
+  position:relative;
+  z-index:30;
+}
+.nav-btn{
+  flex:1;
+  padding:13px 14px;
+  border-radius:13px;
+  border:1px solid var(--border);
+  background:var(--surface-2);
+  color:var(--text);
+  font-family:var(--font-body);
+  font-size:15px;
+  font-weight:600;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+.nav-btn.primary{
+  background:linear-gradient(135deg,var(--violet),#6C4FE0);
+  border-color:transparent;
+  color:#fff;
+}
+.nav-btn:disabled{opacity:0.35;pointer-events:none;}
+.nav-count{
+  flex-shrink:0;
+  font-size:13px;
+  color:var(--text-faint);
+  min-width:52px;
+  text-align:center;
+}
+
+/* ---------- TOC Drawer ---------- */
+.scrim{
+  position:fixed;inset:0;background:rgba(0,0,0,0.55);
+  opacity:0;pointer-events:none;transition:opacity .25s ease;z-index:40;
+}
+.scrim.open{opacity:1;pointer-events:auto;}
+.drawer{
+  position:fixed;top:0;right:0;bottom:0;
+  width:min(340px,86vw);
+  background:var(--surface);
+  border-left:1px solid var(--border);
+  z-index:50;
+  transform:translateX(100%);
+  transition:transform .3s cubic-bezier(.2,.8,.2,1);
+  display:flex;flex-direction:column;
+  padding-top:var(--safe-t);
+  padding-bottom:var(--safe-b);
+}
+.drawer.open{transform:translateX(0);}
+.drawer-head{
+  padding:20px 18px 12px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--border);
+}
+.drawer-head h3{font-size:17px;}
+.drawer-close{
+  width:32px;height:32px;border-radius:9px;background:var(--surface-2);
+  border:1px solid var(--border);color:var(--text);display:flex;align-items:center;justify-content:center;cursor:pointer;
+}
+.drawer-list{overflow-y:auto;padding:10px 8px 24px;}
+.drawer-section-label{
+  font-size:11px;letter-spacing:0.06em;color:var(--text-faint);
+  padding:14px 12px 6px;
+  font-weight:600;
+}
+.drawer-item{
+  width:100%;text-align:left;
+  padding:10px 12px;
+  border-radius:10px;
+  background:transparent;
+  border:none;
+  color:var(--text-dim);
+  font-family:var(--font-body);
+  font-size:14.5px;
+  cursor:pointer;
+  display:block;
+}
+.drawer-item.active{background:var(--mint-soft);color:var(--mint);font-weight:600;}
+.drawer-item:active{background:var(--surface-2);}
+
+/* ---------- Reusable content components ---------- */
+.kicker{
+  font-size:13px;
+  color:var(--mint);
+  font-weight:600;
+  margin-bottom:10px;
+}
+.chapter-num{
+  font-family:var(--font-display);
+  font-size:15px;
+  color:var(--text-faint);
+  margin-bottom:6px;
+}
+h1.title{font-size:30px;line-height:1.2;margin-bottom:14px;}
+h2.title{font-size:26px;line-height:1.22;margin-bottom:14px;}
+.lede{font-size:19px;line-height:1.65;color:var(--text-dim);margin-bottom:18px;}
+.body-text{font-size:18px;line-height:1.72;color:var(--text);}
+.body-text strong{color:var(--mint);font-weight:700;}
+.body-text b{color:#fff;}
+ul.list, ol.list{padding-left:22px;margin:0 0 18px;}
+.list li{font-size:18px;line-height:1.65;margin-bottom:10px;color:var(--text);}
+
+.callout{
+  border-radius:16px;
+  padding:18px 18px;
+  margin:18px 0;
+  border:1px solid var(--border);
+  background:var(--surface-2);
+}
+.callout.tip{border-color:var(--tip-border);background:var(--mint-soft);}
+.callout.warn{border-color:var(--warn-border);background:var(--warn-bg);}
+.callout-label{
+  font-size:13px;font-weight:700;margin-bottom:6px;
+  display:flex;align-items:center;gap:7px;
+}
+.callout.tip .callout-label{color:var(--mint);}
+.callout.warn .callout-label{color:var(--warn);}
+.callout p{font-size:16.5px;line-height:1.6;color:var(--text-dim);margin-bottom:8px;}
+.callout p:last-child{margin-bottom:0;}
+
+.analogy{
+  border-left:3px solid var(--violet);
+  padding:4px 0 4px 16px;
+  margin:18px 0;
+  font-size:17.5px;
+  line-height:1.65;
+  color:var(--text-dim);
+  font-style:normal;
+}
+.analogy b{color:var(--text);}
+
+/* Term dictionary cards */
+.term-card{
+  background:var(--surface-2);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:16px 18px;
+  margin-bottom:14px;
+}
+.term-card h4{font-family:var(--font-display);font-size:19px;color:var(--gold);margin-bottom:8px;}
+.term-row{margin-bottom:6px;}
+.term-row:last-child{margin-bottom:0;}
+.term-label{font-size:12px;font-weight:700;color:var(--text-faint);letter-spacing:0.03em;margin-bottom:2px;}
+.term-value{font-size:15.5px;line-height:1.55;color:var(--text-dim);}
+
+/* Section divider page */
+.divider-page{align-items:center;text-align:center;}
+.divider-tag{
+  font-family:var(--font-display);
+  font-size:13px;
+  color:var(--text-faint);
+  margin-bottom:14px;
+  letter-spacing:0.05em;
+}
+.divider-num{
+  font-family:var(--font-display);
+  font-size:62px;
+  font-weight:700;
+  background:linear-gradient(135deg,var(--mint),var(--violet));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  line-height:1;
+  margin-bottom:18px;
+}
+.divider-title{font-size:28px;margin-bottom:14px;}
+.divider-sub{font-size:17px;color:var(--text-dim);line-height:1.6;max-width:420px;margin:0 auto;}
+
+/* Cover */
+.cover-page{align-items:center;text-align:center;justify-content:center;}
+.cover-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:8px 16px;border-radius:99px;
+  background:var(--surface-2);border:1px solid var(--border);
+  font-size:12.5px;color:var(--text-dim);margin-bottom:28px;
+}
+.cover-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--mint);}
+.cover-title{
+  font-family:var(--font-display);
+  font-size:44px;
+  line-height:1.05;
+  font-weight:700;
+  margin-bottom:16px;
+}
+.cover-title span{
+  background:linear-gradient(135deg,var(--mint),var(--violet));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.cover-sub{font-size:18px;color:var(--text-dim);line-height:1.55;max-width:420px;margin:0 auto 30px;}
+.cover-divider{width:56px;height:2px;background:var(--gold);margin:0 auto 26px;opacity:0.7;}
+.cover-brand{font-family:var(--font-display);font-size:16px;font-weight:600;color:#fff;margin-bottom:4px;}
+.cover-role{font-size:14px;color:var(--text-faint);margin-bottom:30px;}
+.cover-start{
+  margin-top:6px;
+  display:inline-flex;align-items:center;gap:8px;
+  padding:15px 26px;border-radius:14px;
+  background:linear-gradient(135deg,var(--violet),#6C4FE0);
+  color:#fff;font-weight:700;font-size:16px;
+  cursor:pointer;border:none;font-family:var(--font-body);
+}
+.cover-foot{margin-top:38px;font-size:13px;color:var(--text-faint);}
+
+/* Checklist */
+.checklist-item{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:13px 14px;
+  border-radius:13px;
+  background:var(--surface-2);
+  border:1px solid var(--border);
+  margin-bottom:9px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+.checklist-item.checked{border-color:var(--tip-border);background:var(--mint-soft);}
+.check-box{
+  flex-shrink:0;width:22px;height:22px;border-radius:7px;
+  border:2px solid var(--text-faint);
+  display:flex;align-items:center;justify-content:center;
+  margin-top:1px;
+}
+.checklist-item.checked .check-box{background:var(--mint);border-color:var(--mint);}
+.check-box svg{width:13px;height:13px;opacity:0;color:#0B0715;}
+.checklist-item.checked .check-box svg{opacity:1;}
+.checklist-item span{font-size:16px;line-height:1.5;color:var(--text-dim);}
+.checklist-item.checked span{color:var(--text);}
+.checklist-progress{
+  font-size:14px;color:var(--text-faint);margin-bottom:16px;
+}
+
+.brand-footer{
+  margin-top:30px;
+  padding-top:18px;
+  border-top:1px solid var(--border);
+  font-size:12.5px;
+  color:var(--text-faint);
+  text-align:center;
+}
+.brand-footer b{color:var(--text-dim);}
+
+.eyebrow-pair{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
+.pill{
+  font-size:12px;padding:5px 11px;border-radius:99px;
+  background:var(--surface-2);border:1px solid var(--border);color:var(--text-faint);
+}
+
+/* two-col grid for definitions summary on small screens still stacks */
+@media (min-width:520px){
+  .cover-title{font-size:52px;}
+  h1.title{font-size:34px;}
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="topbar">
+    <div class="brand-mini"><b>Crypto</b> for Beginners</div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <button class="menu-btn" id="menuBtn" aria-label="Open contents">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+    </button>
+  </div>
+
+  <main id="main"><div id="pageContainer"></div></main>
+
+  <div class="footer-nav">
+    <button class="nav-btn" id="prevBtn">← Back</button>
+    <div class="nav-count" id="navCount">1 / 1</div>
+    <button class="nav-btn primary" id="nextBtn">Next →</button>
+  </div>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-head">
+    <h3>Contents</h3>
+    <button class="drawer-close" id="drawerClose" aria-label="Close">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="6" y1="18" x2="18" y2="6"/></svg>
+    </button>
+  </div>
+  <div class="drawer-list" id="drawerList"></div>
+</div>
+
+<script>
+/* ============ helpers for content ============ */
+function term(name,meaning,example,why){
+  return `<div class="term-card">
+    <h4>${name}</h4>
+    <div class="term-row"><div class="term-label">SIMPLE MEANING</div><div class="term-value">${meaning}</div></div>
+    <div class="term-row"><div class="term-label">EXAMPLE</div><div class="term-value">${example}</div></div>
+    <div class="term-row"><div class="term-label">WHY IT MATTERS</div><div class="term-value">${why}</div></div>
+  </div>`;
+}
+function footerBrand(){
+  return `<div class="brand-footer">AsaoluInfotech <b>|</b> Crypto Coach • Analyst • Strategist</div>`;
+}
+function checkItem(text){
+  return `<div class="checklist-item" data-c="1"><div class="check-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div><span>${text}</span></div>`;
+}
+
+/* ============ PAGES ============ */
+const pages = [];
+
+/* ---- 0. COVER ---- */
+pages.push({type:'cover', navTitle:'Cover', section:'Start', html:`
+<div class="page cover-page">
+  <div class="cover-badge"><span class="dot"></span> Your first step before the video lessons</div>
+  <h1 class="cover-title">CRYPTO FOR <span>BEGINNERS</span></h1>
+  <p class="cover-sub">A simple introduction to understanding cryptocurrency, Web3 & the crypto ecosystem.</p>
+  <div class="cover-divider"></div>
+  <div class="cover-brand">Created by AsaoluInfotech</div>
+  <div class="cover-role">Crypto Coach · Analyst · Strategist</div>
+  <button class="cover-start" id="coverStart">Start Reading →</button>
+  <div class="cover-foot">Best experienced on your phone · Takes about 40–55 minutes</div>
+</div>`});
+
+/* ---- 1. DISCLAIMER ---- */
+pages.push({type:'content', navTitle:'Disclaimer', section:'Start', html:`
+<div class="page">
+  <div class="kicker">Before we begin</div>
+  <h1 class="title">A Quick, Honest Disclaimer</h1>
+  <div class="callout warn">
+    <div class="callout-label">⚠ Please read this first</div>
+    <p>This ebook is for <b>educational purposes only</b>. It is not financial, investment, legal or tax advice.</p>
+    <p>Cryptocurrency involves <b>real risk</b>, including the possibility of losing money. Prices can rise and fall quickly, and nothing here guarantees you will make a profit.</p>
+    <p>Please do your own research, take your time to learn, and never risk money you cannot afford to lose.</p>
+  </div>
+  <p class="body-text">Our goal in this book is simple: help you <strong>understand</strong> crypto before you ever think about putting money into it. Understanding always comes first.</p>
+  ${footerBrand()}
+</div>`});
+
+/* ---- 2. INTRO A ---- */
+pages.push({type:'content', navTitle:'Welcome From AsaoluInfotech', section:'Start', html:`
+<div class="page">
+  <div class="kicker">A note from AsaoluInfotech</div>
+  <h1 class="title">Welcome. Let's Start Simple.</h1>
+  <p class="lede">This ebook is your first step into the world of cryptocurrency.</p>
+  <p class="body-text">Before I begin sending you the video lessons, I want you to first get comfortable with the <b>language</b> and <b>basic ideas</b> of crypto — so that when the videos start, nothing sounds like a foreign language to you.</p>
+  <p class="body-text">You may have already heard words like <b>Bitcoin, Ethereum, blockchain, wallet, token, DeFi, meme coin, exchange, gas fee, liquidity, market cap</b> — and not been totally sure what any of them mean. That's completely normal, and that's exactly why this book exists.</p>
+  <div class="analogy">Think of this ebook as your <b>crypto dictionary, map and foundation</b> — all in one place.</div>
+  ${footerBrand()}
+</div>`});
+
+/* ---- 3. INTRO B ---- */
+pages.push({type:'content', navTitle:'How To Use This Book', section:'Start', html:`
+<div class="page">
+  <div class="kicker">How to use this book</div>
+  <h1 class="title">You Don't Need To Memorize Anything</h1>
+  <p class="body-text">You don't need to memorize every word in this book immediately. The goal is simply to become <b>familiar</b> with the terms and understand what they generally mean.</p>
+  <p class="body-text">Once you've gone through this book, the upcoming video lessons will go much deeper into practical things such as:</p>
+  <ul class="list">
+    <li>Setting up your first wallet</li>
+    <li>Using exchanges to buy and sell</li>
+    <li>Understanding networks and sending crypto safely</li>
+    <li>Trading, DeFi, meme coins and security</li>
+  </ul>
+  <div class="callout tip">
+    <div class="callout-label">💡 Tip</div>
+    <p>Read this at your own pace. If a page feels unclear, re-read it once, then keep moving. Things will click more as you go further into the book.</p>
+  </div>
+  <p class="body-text">Let's begin. 🚀</p>
+  ${footerBrand()}
+</div>`});
+
+/* ---- Section divider helper ---- */
+function divider(num,tag,title,sub){
+  return `<div class="page divider-page">
+    <div class="divider-tag">${tag}</div>
+    <div class="divider-num">${num}</div>
+    <h2 class="divider-title">${title}</h2>
+    <p class="divider-sub">${sub}</p>
+  </div>`;
+}
+
+/* ---- SECTION 1 divider ---- */
+pages.push({type:'content', navTitle:'Section 1', section:'Section 1 — Welcome to Crypto', html:
+  divider('01','SECTION 1','Welcome to Crypto','We start from zero — what cryptocurrency actually is, why Bitcoin exists, and what a blockchain really does.')});
+
+/* ---- Ch1 ---- */
+pages.push({type:'content', navTitle:'What Is Cryptocurrency?', section:'Section 1 — Welcome to Crypto', html:`
+<div class="page">
+  <div class="chapter-num">Chapter 1</div>
+  <h1 class="title">What Is Cryptocurrency?</h1>
+  <p class="lede">In simple terms, cryptocurrency is <b>digital money</b> that lives on the internet and is not controlled by any single bank or government.</p>
+  <p class="body-text">Normal money — like naira, dollars or pounds — is issued and controlled by a government or central bank. That bank decides how much money exists and keeps the official record of who owns what in its own private system.</p>
+  <p class="body-text">Cryptocurrency works differently. Instead of one central authority keeping the records, thousands of computers around the world keep an identical copy of the records together. This is why crypto is often called <b>"decentralized"</b> money — no single company or government fully controls it.</p>
+  <div class="analogy">Think of it this way: instead of one person holding the only copy of an account book, <b>thousands of people</b> around the world each hold an identical copy — and they all check each other's copies to make sure nobody cheats.</div>
+  <p class="body-text">People use cryptocurrency for many reasons: sending money across the world quickly, storing value outside of a single country's currency, participating in new digital communities, or simply because they believe in the technology's future.</p>
+  <p class="body-text">Bitcoin was the first cryptocurrency ever created, and it's still the most important one — which is exactly what we'll look at next.</p>
+  ${footerBrand()}
+</div>`});
+
+/* ---- Ch2 ---- */
+pages.push({type:'content', navTitle:'What Is Bitcoin?', section:'Section 1 — Welcome to Crypto', html:`
+<div class="page">
+  <div class="chapter-num">Chapter 2</div>
+  <h1 class="title">What Is Bitcoin?</h1>
+  <p class="lede">Bitcoin was the very first cryptocurrency, created in 2009 by a mysterious person (or group) using the name <b>Satoshi Nakamoto</b>.</p>
+  <p class="body-text">To this day, nobody knows Satoshi Nakamoto's real identity. They wrote a short document explaining how Bitcoin would work, released the software, and then eventually disappeared from public life — leaving Bitcoin to run on its own, exactly as designed.</p>
+  <p class="body-text">Bitcoin was created as an answer to one big question: <b>"Can money exist without needing a bank or government to manage it?"</b></p>
+  <div class="callout tip">
+    <div class="callout-label">💡 A key fact about Bitcoin</div>
+    <p>Bitcoin has a <b>fixed, limited supply</b>. Only 21 million bitcoins will ever exist. No one can create more, no matter how powerful they are. This is very different from regular currencies, which governments can print more of at any time.</p>
+  </div>
+  <p class="body-text">Because of this limited supply, many people call Bitcoin <b>"digital gold"</b> — something scarce that can hold value over time, similar to how gold is valued because there's only so much of it in the world.</p>
+  <p class="body-text">Bitcoin remains the foundation of the entire crypto ecosystem. Many other coins and tokens exist today, but almost all of them are, in some way, inspired by what Bitcoin proved was possible.</p>
+  ${footerBrand()}
+</div>`});
+
+/* ---- Ch3 ---- */
+pages.push({type:'content', navTitle:'What Is Blockchain?', section:'Section 1 — Welcome to Crypto', html:`
+<div class="page">
+  <div class="chapter-num">Chapter 3</div>
+  <h1 class="title">What Is a Blockchain?</h1>
+  <p class="lede">A blockchain is simply a <b>digital record system</b> that keeps track of transactions — who sent what, to whom, and when.</p>
+  <div class="analogy">Think of it this way: imagine a shared notebook that thousands of people around the world hold identical copies of. Every time someone makes a transaction, that transaction is written into everyone's notebook at the same time. Nobody can secretly erase a page or change a number, because everyone else's notebook would immediately disagree with them.</div>
+  <p class="body-text">That "shared notebook" is the blockchain. Here's how it's built, in simple language:</p>
+  <ul class="list">
+    <li><b>Transactions</b> — every time crypto moves from one wallet to another, that's a transaction.</li>
+    <li><b>Blocks</b> — transactions are bundled together in groups called blocks.</li>
+    <li><b>Chain</b> — each new block is linked to the block before it, forming a long, unbreakable chain going back to the very first transaction.</li>
+    <li><b>Verification</b> — before a block is added, computers on the network check that everything is correct.</li>
+    <li><b>Decentralization</b> — no single computer controls the chain. Thousands work together to keep it accurate.</li>
+  </ul>
+  <p class="body-text">This is what makes blockchain records so hard to fake — to cheat the system, someone would have to change the records on the majority of computers in the network at the exact same time, which is extremely difficult.</p>
+  ${footerBrand()}
+</div>`});
+
+/* ---- SECTION 2 divider ---- */
+pages.push({type:'content', navTitle:'Section 2', section:'Section 2 — The Crypto World', html:
+  divider('02','SECTION 2','The Crypto World','Coins, tokens, networks and wallets — the building blocks you\'ll interact with every time you touch crypto.')});
+
+/* ---- Ch4 ---- */
+pages.push({type:'content', navTitle:'Coins vs Tokens', section:'Section 2 — The Crypto World', html:`
+<div class="page">
+  <div class="chapter-num">Chapter 4</div>
+  <h1 class="title">Coins vs Tokens</h1>
+  <p class="lede">People often use "coin" and "token" as if they mean the same thing — but there's a simple difference.</p>
+  <div class="analogy"><b>A coin</b> has its own independent network. Bitcoin (BTC) runs on the Bitcoin network. Ethereum's coin, ETH, runs on the Ethereum network. Solana's coin, SOL, runs on the Solana network.<br><br><b>A token</b> doesn't have its own network — it's built <i>on top of</i> someone else's network, the way an app is built to run on a phone's operating system.</div>
+  <p class="body-text">For example, thousands of different tokens exist on the Ethereum network and thousands more exist on the Solana network, even though those networks each have just one main coin (ETH and SOL).</p>
+  <p class="body-text">The three networks you'll hear about most as a beginner are:</p>
+  <ul class="list">
+    <li><b>Bitcoin</b> — the original network, mainly used for BTC itself.</li>
+    <li><b>Ethereum</b> — one of the most popular networks for building tokens, NFTs and apps.</li>
+    <li><b>Solana</b> — known for being fast and cheap, and very popular for meme tokens.</li>
+  </ul>
+  <p class="body-text">You don't need to master this distinction today. Just remember: <b>coin = has its own network. token = lives on someone else's network.</b></p>
+  ${footerBrand()}
+</div>`});
+
+/* ---- Ch5 ---- */
+pages.push({type:'content', navTitle:'Understanding Crypto Networks', section:'Section 2 — The Crypto World', html:`
+<div class="page">
+  <div class="chapter-num">Chapter 5</div>
+  <h1 class="title">Understanding Crypto Networks</h1>
+  <p class="lede">A "network" (sometimes called a "chain") is the underlying system that processes and records transactions.</p>
+  <p class="body-text">Every crypto asset lives on a specific network. Some of the most common ones you'll come across as a beginner are:</p>
+  <ul class="list">
+    <li><b>Bitcoin</b> — the oldest and most secure network, mostly used for BTC.</li>
+    <li><b>Ethereum</b> — a major network for tokens, NFTs and decentralized apps.</li>
+    <li><b>Solana</b> — fast, low-fee, and popular for trading and meme tokens.</li>
+    <li><b>BNB Chain</b> — Binance's network, known for low fees.</li>
+    <li><b>Polygon</b> — a fast, low-cost network often used alongside Ethereum.</li>
+  </ul>
+  <div class="callout warn">
+    <div class="callout-label">⚠ Why this matters</div>
+    <p>Choosing the <b>correct network</b> is one of the most important things to get right in crypto. If you send a token on the wrong network, or to an address built for a different network, that money can be <b>permanently lost</b>. We'll cover this in more detail — and how to avoid it — in the safety section later in this book.</p>
+  </div>
+  <p class="body-text">For now, just remember: always double-check the network before sending or receiving anything.</p>
+  ${footerBrand()}
+</div>`});
+
+/* ---- Ch6 ---- */
+pages.push({type:'content', navTitle:'What Is a Crypto Wallet?', section:'Section 2 — The Crypto World', html:`
+<div class="page">
+  <div class="chapter-num">Chapter 6</div>
+  <h1 class="title">What Is a Crypto Wallet?</h1>
+  <p class="lede">A crypto wallet is an app or device that lets you send, receive and manage your crypto.</p>
+  <p class="body-text">Here's something important: a wallet doesn't actually "store" your coins the way a physical wallet stores cash. Your crypto always lives on the blockchain. What your wallet really stores is the <b>key</b> that proves the crypto on the blockchain belongs to you.</p>
+  <ul class="list">
+    <li><b>Wallet address / Public address</b> — like your account number. You can share this freely so people can send you crypto.</li>
+    <li><b>Private key</b> — a secret code that proves you own the wallet and lets you move the funds. This must <b>never</b> be shared with anyone.</li>
+    <li><b>Seed phrase</b> — a set of 12 or 24 words that can recreate your entire wallet. It is even more important to protect than your private key, because it can restore full access to your funds.</li>
+  </ul>
+  <div class="callout warn">
+    <div class="callout-label">⚠ Golden rule</div>
+    <p>Anyone who has your private key or seed phrase has <b>full control</b> of your funds — instantly, and permanently. No legitimate person, team or "support agent" will ever genuinely need to ask you for it.</p>
+  </div>
+  <p class="body-text">There are two main types of wallets:</p>
+  <ul class="list">
+    <li><b>Custodial wallet</b> — a company (like an exchange) holds your keys for you. Easier for beginners, but you rely on that company's honesty and security.</li>
+    <li><b>Non-custodial wallet</b> — you hold your own keys and seed phrase. Full control, full responsibility.</li>
+  </ul>
+  ${footerBrand()}
+</div>`});
+
+/* ---- SECTION 3 divider — Dictionary ---- */
+pages.push({type:'content', navTitle:'Section 3', section:'Section 3 — Crypto Dictionary', html:
+  divider('03','SECTION 3','The Crypto Dictionary','Your quick-reference glossary. Skim it now, and come back to it whenever a video mentions a word you\'ve forgotten.')});
+
+/* Dictionary Page 1 — Foundations */
+pages.push({type:'content', navTitle:'Foundations', section:'Section 3 — Crypto Dictionary', html:`
+<div class="page">
+  <div class="kicker">Dictionary · Part 1 of 7</div>
+  <h2 class="title">Foundations</h2>
+  ${term('Address','A unique string of letters and numbers that acts like your crypto account number.','Something like <code>0x8fA...92c1</code> — you share this to receive crypto.','You need it to send or receive anything, and it never changes.')}
+  ${term('Blockchain','A shared digital record book that stores every transaction, kept identically by thousands of computers.','Every Bitcoin transaction ever made is recorded on the Bitcoin blockchain.','It\'s the technology that makes crypto trustworthy without a bank.')}
+  ${term('Block','A bundle of transactions grouped together and added to the blockchain at once.','A new Bitcoin block is added roughly every 10 minutes.','Understanding blocks helps you understand why transactions take a bit of time to confirm.')}
+  ${term('Coin','A crypto asset that has its own independent blockchain network.','Bitcoin (BTC), Ethereum (ETH), Solana (SOL).','Helps you tell the difference between a coin and a token built on top of one.')}
+  ${term('Token','A crypto asset built on top of someone else\'s blockchain network, rather than having its own.','A meme token created on the Solana network.','Most crypto assets you\'ll encounter as a beginner are actually tokens, not coins.')}
+  ${term('Wallet','An app or device used to manage the keys that control your crypto.','A mobile wallet app you install on your phone.','It\'s your entry point into using crypto directly.')}
+  ${term('Private Key','A secret code that proves ownership of a wallet and allows funds to be moved.','A long string of random characters generated when you create a wallet.','Anyone with it can control your funds — never share it.')}
+  ${term('Public Key','A code derived from your private key, used to generate your wallet address.','Works behind the scenes to create your shareable address.','Safe to be part of, since it can\'t be used to steal funds on its own.')}
+  ${term('Seed Phrase','A set of 12–24 words that can fully restore a wallet and all its funds.','"apple river cloud tiger..." (12 or 24 random words).','If lost, your wallet may be unrecoverable. If stolen, your funds can be taken.')}
+  ${footerBrand()}
+</div>`});
+
+/* Dictionary Page 2 — Networks & Tech */
+pages.push({type:'content', navTitle:'Networks & Tech', section:'Section 3 — Crypto Dictionary', html:`
+<div class="page">
+  <div class="kicker">Dictionary · Part 2 of 7</div>
+  <h2 class="title">Networks & Tech</h2>
+  ${term('Network','The underlying blockchain system that processes and records transactions.','Ethereum, Solana, BNB Chain.','Sending on the wrong network can cause lost funds — always check.')}
+  ${term('Gas','The computing "fuel" needed to process a transaction on a network.','Ethereum transactions require gas, paid in ETH.','Without enough gas, your transaction won\'t go through.')}
+  ${term('Gas Fee','The actual cost charged to process a transaction, paid to the network.','A swap might cost $2 in gas fees during busy times.','Fees change with network traffic — always check before confirming.')}
+  ${term('Transaction','Any action that moves crypto from one wallet to another, recorded on the blockchain.','Sending 0.01 BTC to a friend.','This is the basic unit of everything that happens on a blockchain.')}
+  ${term('Transaction Hash','A unique ID given to every transaction, used to look it up and confirm it happened.','Pasting a hash into a block explorer shows the transaction\'s full details.','Useful proof that a payment actually went through.')}
+  ${term('Smart Contract','Self-executing code on a blockchain that automatically carries out an agreement.','A swap app that automatically exchanges one token for another.','Powers almost everything beyond simple sending — DeFi, NFTs, apps.')}
+  ${term('Bridge','A tool that moves assets from one blockchain network to another.','Bridging USDC from Ethereum to Solana.','Bridges can be risky — only use well-known, reputable ones.')}
+  ${term('Token Contract Address','The unique address that identifies a specific token on a network.','Used to verify you\'re looking at the real token, not a fake copy.','Scammers create fake tokens with similar names — always verify the contract address.')}
+  ${footerBrand()}
+</div>`});
+
+/* Dictionary Page 3 — Trading Places */
+pages.push({type:'content', navTitle:'Trading Places', section:'Section 3 — Crypto Dictionary', html:`
+<div class="page">
+  <div class="kicker">Dictionary · Part 3 of 7</div>
+  <h2 class="title">Where Trading Happens</h2>
+  ${term('Exchange','A platform where people buy, sell and trade crypto.','Binance, Coinbase.','This is usually where beginners buy their first crypto.')}
+  ${term('CEX (Centralized Exchange)','An exchange run by a company that manages accounts and holds funds on your behalf.','Signing up on Binance with an email and password.','Easier for beginners, but you\'re trusting the company\'s security.')}
+  ${term('DEX (Decentralized Exchange)','A trading platform that runs on smart contracts, with no central company holding your funds.','Trading directly from your own wallet without creating an account.','Gives you more control, but also more responsibility.')}
+  ${term('P2P (Peer-to-Peer)','Buying or selling crypto directly with another individual, rather than through an exchange\'s order book.','Buying USDT directly from another user via an exchange\'s P2P marketplace.','A common way to convert local currency into crypto in many countries.')}
+  ${term('Order Book','A live list showing current buy and sell orders for an asset.','Seeing all current buyers and sellers of BTC at different prices.','Helps you understand supply, demand and current prices.')}
+  ${term('Limit Order','An order to buy or sell at a specific price you set, which only executes if the market reaches it.','Setting a buy order for BTC at $60,000 even though it\'s at $62,000 now.','Gives you control over the exact price you trade at.')}
+  ${term('Market Order','An order to buy or sell immediately at the current market price.','Buying ETH right now at whatever the current price is.','Fast, but you accept the price as it is at that moment.')}
+  ${term('Trading Pair','Two assets shown together to represent their exchange rate.','BTC/USDT shows how much USDT one BTC is worth.','Almost every trade you make involves a pair.')}
+  ${footerBrand()}
+</div>`});
+
+/* Dictionary Page 4 — Swaps & DeFi Basics */
+pages.push({type:'content', navTitle:'Swaps & DeFi Basics', section:'Section 3 — Crypto Dictionary', html:`
+<div class="page">
+  <div class="kicker">Dictionary · Part 4 of 7</div>
+  <h2 class="title">Swaps & DeFi Basics</h2>
+  ${term('Swap','Exchanging one token for another directly, usually through a DEX.','Swapping SOL for USDC in a wallet app.','One of the most common actions you\'ll take in crypto.')}
+  ${term('Swap Fee','A small fee charged for performing a swap.','A 0.3% fee taken from a token swap.','These fees add up, especially if you trade often.')}
+  ${term('DeFi (Decentralized Finance)','Financial services — lending, borrowing, trading, earning — built on blockchains without traditional banks.','Lending your crypto through a DeFi app to earn interest.','A major part of the crypto world, but comes with its own risks.')}
+  ${term('Stablecoin','A crypto token designed to stay equal in value to a real-world currency, usually the US dollar.','1 USDT is designed to always equal about $1.','Useful for saving value without leaving the crypto ecosystem.')}
+  ${term('USDT (Tether)','One of the most widely used stablecoins, pegged to the US dollar.','Converting your local currency into USDT to hold value steadily.','Commonly used across almost every exchange and network.')}
+  ${term('USDC (USD Coin)','Another major dollar-pegged stablecoin, known for transparency.','Used similarly to USDT across many DeFi apps.','A common alternative to USDT.')}
+  ${term('Liquidity','How easily an asset can be bought or sold without dramatically affecting its price.','A popular token with lots of buyers/sellers has high liquidity.','Low liquidity can mean big price swings and difficulty selling.')}
+  ${term('Liquidity Pool','A pool of two tokens locked together that allows people to swap between them.','A SOL/USDC pool that traders swap through.','Powers decentralized exchanges — understanding it helps you understand DeFi.')}
+  ${footerBrand()}
+</div>`});
+
+/* Dictionary Page 5 — Liquidity & Yield */
+pages.push({type:'content', navTitle:'Liquidity & Yield', section:'Section 3 — Crypto Dictionary', html:`
+<div class="page">
+  <div class="kicker">Dictionary · Part 5 of 7</div>
+  <h2 class="title">Liquidity & Yield</h2>
+  ${term('TVL (Total Value Locked)','The total amount of money currently deposited in a DeFi app or protocol.','A protocol with $500 million TVL.','A rough sign of how much trust and usage a platform has — but not a guarantee of safety.')}
+  ${term('Liquidity Lock','A mechanism that locks a token\'s liquidity for a set time, preventing it from being suddenly withdrawn.','A token team locking liquidity for 6 months.','Locked liquidity reduces (but doesn\'t eliminate) the risk of a rug pull.')}
+  ${term('Staking','Locking up crypto to help support a network\'s operations, in exchange for rewards.','Staking SOL to earn a percentage return over time.','A common way people try to earn passive rewards — but rewards and risks vary.')}
+  ${term('Yield','The return or reward earned from activities like staking or lending.','Earning 5% yield per year on a stablecoin deposit.','Higher yields usually come with higher risk — always ask why the yield is so high.')}
+  ${term('APY (Annual Percentage Yield)','The yearly return rate including the effect of compounding.','A pool advertising 20% APY.','Helps you compare returns across different platforms.')}
+  ${term('APR (Annual Percentage Rate)','The yearly return rate without compounding.','A lending rate quoted as 8% APR.','Similar to APY, but calculated slightly differently — worth knowing the difference.')}
+  ${term('Airdrop','A free distribution of tokens to certain wallets, often as a reward or marketing strategy.','Early users of an app receiving free tokens later.','Exciting, but also a common scam tactic — verify sources carefully.')}
+  ${footerBrand()}
+</div>`});
+
+/* Dictionary Page 6 — Market Metrics */
+pages.push({type:'content', navTitle:'Market Metrics', section:'Section 3 — Crypto Dictionary', html:`
+<div class="page">
+  <div class="kicker">Dictionary · Part 6 of 7</div>
+  <h2 class="title">Market Metrics</h2>
+  ${term('Market Cap','The total value of a crypto asset — price multiplied by circulating supply.','A token at $1 with 10 million coins has a $10 million market cap.','A better measure of size than price alone.')}
+  ${term('Volume','The total amount of an asset traded over a given period, usually 24 hours.','$2 billion in BTC traded today.','High volume usually means easier buying/selling.')}
+  ${term('Slippage','The difference between the expected price of a trade and the actual price you get.','Expecting to pay $1 per token but actually paying $1.05 due to low liquidity.','More likely with low-liquidity tokens — can cost you more than expected.')}
+  ${term('Volatility','How sharply and quickly an asset\'s price moves up or down.','A token jumping 40% in a single day.','Crypto is known for high volatility — prepare yourself mentally for price swings.')}
+  ${term('ATH (All-Time High)','The highest price an asset has ever reached.','BTC\'s ATH was reached at a specific historic price point.','Useful context, but a past ATH doesn\'t predict future price.')}
+  ${term('ATL (All-Time Low)','The lowest price an asset has ever reached.','A token\'s lowest recorded price since launch.','Helps you understand the full price history of an asset.')}
+  ${term('Bull Market','A period when prices are broadly rising and confidence is high.','2021 was widely seen as a strong bull market.','Understanding market phases helps manage expectations and emotions.')}
+  ${term('Bear Market','A period when prices are broadly falling and confidence is low.','Extended downturns after a bull market peak.','Bear markets are a normal part of crypto cycles, not a sign crypto is "over."')}
+  ${term('Altcoin','Any cryptocurrency that isn\'t Bitcoin.','Ethereum, Solana and thousands of others are all altcoins.','A general umbrella term you\'ll hear constantly.')}
+  ${footerBrand()}
+</div>`});
+
+/* Dictionary Page 7 — Culture & Risk */
+pages.push({type:'content', navTitle:'Culture & Risk', section:'Section 3 — Crypto Dictionary', html:`
+<div class="page">
+  <div class="kicker">Dictionary · Part 7 of 7</div>
+  <h2 class="title">Culture, Slang & Risk</h2>
+  ${term('NFT (Non-Fungible Token)','A unique digital token representing ownership of a specific item, like art or a collectible.','A single unique digital artwork owned by one wallet.','A different concept from regular tokens — each NFT is one-of-a-kind.')}
+  ${term('Meme Coin / Meme Token','A token often created around a joke, trend or community, usually with high volatility.','A dog-themed token that gained popularity through social media.','Can move fast in either direction — treat with extra caution as a beginner.')}
+  ${term('HODL','Crypto slang for holding an asset long-term instead of selling during price swings.','"I\'m going to HODL through this dip."','A mindset term you\'ll see constantly in crypto communities.')}
+  ${term('FOMO (Fear Of Missing Out)','The anxious urge to buy something because its price is rising fast.','Buying a token only because "everyone else is."','A leading cause of poor decisions — learn to recognize it in yourself.')}
+  ${term('FUD (Fear, Uncertainty, Doubt)','Negative information (true or false) spread to scare people into selling.','Rumors spreading to crash a token\'s price.','Learn to separate real news from manipulation.')}
+  ${term('DYOR (Do Your Own Research)','A common reminder to verify information yourself before acting.','Checking a project\'s details instead of trusting a stranger\'s tip.','One of the most important habits in crypto.')}
+  ${term('DCA (Dollar-Cost Averaging)','Investing a fixed amount regularly over time, instead of all at once.','Buying $20 of an asset every week, regardless of price.','A strategy some people use to reduce the impact of volatility.')}
+  ${term('Rug Pull','A scam where creators abandon a project and disappear with investors\' funds.','A token team removing all liquidity and vanishing overnight.','One of the most common scams in the meme token space.')}
+  ${term('Scam','Any deceptive scheme designed to steal money or information.','Fake giveaways, fake support accounts, phishing links.','Crypto scams are common — the security chapter later covers this in depth.')}
+  ${footerBrand()}
+</div>`});
+
+/* ---- SECTION 4 divider ---- */
+pages.push({type:'content', navTitle:'Section 4', section:'Section 4 — Buying & Selling', html:
+  divider('04','SECTION 4','Buying & Selling Crypto','The basic journey your money takes to become crypto — and back again.')});
+
+/* Buying */
+pages.push({type:'content', navTitle:'How People Buy Crypto', section:'Section 4 — Buying & Selling', html:`
+<div class="page">
+  <div class="chapter-num">Chapter</div>
+  <h1 class="title">How People Buy Cryptocurrency</h1>
+  <p class="lede">At its core, buying crypto follows one simple journey:</p>
+  <div class="analogy"><b>Money → Exchange/Platform → Crypto → Wallet</b><br><br>You deposit regular money onto a platform, use it to buy crypto, and then (optionally) move that crypto into your own personal wallet.</div>
+  <p class="body-text">There are a few common ways people get their first crypto:</p>
+  <ul class="list">
+    <li><b>Centralized exchanges (CEX)</b> — deposit money, buy crypto directly on the platform.</li>
+    <li><b>Decentralized exchanges (DEX)</b> — swap one crypto for another using your own wallet, without a company account.</li>
+    <li><b>P2P (peer-to-peer)</b> — buy directly from another individual, often used to convert local currency to crypto.</li>
+    <li><b>Swapping tokens</b> — already have some crypto? You can trade it for a different token.</li>
+  </ul>
+  <div class="callout tip">
+    <div class="callout-label">💡 Beginner focus</div>
+    <p>Right now, focus on understanding the concept, not the exact steps. The video lessons will walk you through each platform hands-on.</p>
+  </div>
+  ${footerBrand()}
+</div>`});
+
+pages.push({type:'content', navTitle:'How Crypto Trading Works', section:'Section 4 — Buying & Selling', html:`
+<div class="page">
+  <div class="chapter-num">Chapter</div>
+  <h1 class="title">How Crypto Trading Works</h1>
+  <p class="lede">Trading simply means buying and selling assets, hoping to profit from price changes over time.</p>
+  <ul class="list">
+    <li><b>Buying</b> — you exchange money (or another token) for a crypto asset.</li>
+    <li><b>Selling</b> — you exchange that asset back for money or another token.</li>
+    <li><b>Trading pairs</b> — every trade compares two assets, like BTC/USDT.</li>
+    <li><b>Market orders</b> — execute instantly at the current price.</li>
+    <li><b>Limit orders</b> — only execute once the price reaches a level you set.</li>
+  </ul>
+  <div class="analogy">A simple example: you buy 1 token at $1. If the price rises to $1.20 and you sell, you've made a $0.20 profit per token (before fees). If it falls to $0.80 and you sell, you've made a $0.20 loss per token.</div>
+  <p class="body-text">This sounds simple — but in reality, prices move constantly and unpredictably, which is why trading always carries risk, even for experienced traders.</p>
+  ${footerBrand()}
+</div>`});
+
+/* ---- SECTION 5 divider ---- */
+pages.push({type:'content', navTitle:'Section 5', section:'Section 5 — DeFi', html:
+  divider('05','SECTION 5','DeFi — Decentralized Finance','Banking-like services, but built with code instead of banks.')});
+
+pages.push({type:'content', navTitle:'What Is DeFi?', section:'Section 5 — DeFi', html:`
+<div class="page">
+  <div class="chapter-num">Chapter</div>
+  <h1 class="title">What Is DeFi?</h1>
+  <p class="lede">DeFi stands for <b>Decentralized Finance</b> — financial services like lending, borrowing, saving and trading, but built on blockchains instead of traditional banks.</p>
+  <div class="analogy">In traditional finance, a bank sits in the middle of every transaction — approving loans, holding your savings, setting interest rates. In DeFi, smart contracts (self-running code) take on that role instead, without a company controlling the process directly.</div>
+  <p class="body-text">Common things you can do in DeFi include:</p>
+  <ul class="list">
+    <li><b>Trading on a DEX</b> — swapping tokens without a centralized company.</li>
+    <li><b>Lending</b> — letting others borrow your crypto in exchange for interest.</li>
+    <li><b>Borrowing</b> — using your crypto as collateral to borrow other assets.</li>
+    <li><b>Liquidity provision</b> — depositing tokens into a pool to help others trade, earning fees in return.</li>
+    <li><b>Staking</b> — locking tokens to support a network and earn rewards.</li>
+  </ul>
+  <div class="callout warn">
+    <div class="callout-label">⚠ Be realistic</div>
+    <p>DeFi can offer attractive returns, but yields can change quickly and platforms can carry real risks, including bugs in the code or project failure. Don't treat any DeFi yield as guaranteed passive income.</p>
+  </div>
+  ${footerBrand()}
+</div>`});
+
+pages.push({type:'content', navTitle:'What Is Liquidity?', section:'Section 5 — DeFi', html:`
+<div class="page">
+  <div class="chapter-num">Chapter</div>
+  <h1 class="title">What Is Liquidity?</h1>
+  <div class="analogy">Think of liquidity like a busy market. If a shop has plenty of stock and plenty of customers, you can buy or sell quickly at a fair price. If a shop has almost nothing in stock and few customers, prices can jump around wildly whenever someone buys or sells even a small amount. Crypto liquidity works the same way.</div>
+  <p class="body-text">Key related terms:</p>
+  <ul class="list">
+    <li><b>Liquidity pool</b> — two tokens locked together that people can swap between.</li>
+    <li><b>Liquidity provider (LP)</b> — someone who deposits tokens into a pool to earn a share of trading fees.</li>
+    <li><b>TVL</b> — the total value locked across a pool or platform.</li>
+    <li><b>Fees</b> — small charges paid on each swap, shared with liquidity providers.</li>
+    <li><b>Impermanent loss</b> — a risk where the value of your deposited tokens can shift compared to just holding them, due to price changes.</li>
+  </ul>
+  <p class="body-text">You don't need to become a liquidity expert today — just understand that liquidity is what makes buying and selling smooth, and low liquidity is a warning sign to watch for, especially with meme tokens.</p>
+  ${footerBrand()}
+</div>`});
+
+/* ---- SECTION 6 divider ---- */
+pages.push({type:'content', navTitle:'Section 6', section:'Section 6 — Meme Coins', html:
+  divider('06','SECTION 6','Meme Coins & Meme Tokens','Fun, fast, and famously risky. Here\'s what you need to know before you go near one.')});
+
+pages.push({type:'content', navTitle:'What Are Meme Coins?', section:'Section 6 — Meme Coins', html:`
+<div class="page">
+  <div class="chapter-num">Chapter</div>
+  <h1 class="title">What Are Meme Coins?</h1>
+  <p class="lede">Meme coins (or meme tokens) are crypto assets often created around a joke, trend, animal or internet culture reference, rather than a specific technical product.</p>
+  <p class="body-text">They tend to become popular through:</p>
+  <ul class="list">
+    <li><b>Community</b> — a loud, active group of holders promoting it.</li>
+    <li><b>Narratives</b> — a compelling story or trend people want to be part of.</li>
+    <li><b>Speculation</b> — people buying purely hoping the price rises quickly.</li>
+  </ul>
+  <div class="callout warn">
+    <div class="callout-label">⚠ Extreme volatility</div>
+    <p>Meme tokens can move dramatically in both directions — sometimes gaining or losing large percentages of their value within hours. Many meme tokens eventually lose most or all of their value.</p>
+  </div>
+  <p class="body-text">Before looking at any meme token, beginners should at least check:</p>
+  <ul class="list">
+    <li><b>Market cap</b> — how large the token already is.</li>
+    <li><b>Liquidity</b> — how easily it can be bought or sold.</li>
+    <li><b>Holders</b> — how many wallets hold the token, and whether it's concentrated in a few hands.</li>
+    <li><b>Volume</b> — how actively it's being traded.</li>
+    <li><b>Contract address</b> — to confirm you're looking at the real token, not a copycat.</li>
+  </ul>
+  <p class="body-text">We'll go much deeper into meme-token research and safety in the video lessons — for now, just understand that meme coins sit at the higher-risk end of crypto.</p>
+  ${footerBrand()}
+</div>`});
+
+/* ---- SECTION 7 divider ---- */
+pages.push({type:'content', navTitle:'Section 7', section:'Section 7 — Crypto Safety', html:
+  divider('07','SECTION 7','Crypto Safety','The single most important section in this entire book. Please read it carefully.')});
+
+pages.push({type:'content', navTitle:'Protecting Your Crypto', section:'Section 7 — Crypto Safety', html:`
+<div class="page">
+  <div class="chapter-num">Chapter</div>
+  <h1 class="title">Protecting Your Crypto</h1>
+  <p class="lede">This is, without question, the most important chapter in this book. Please read it slowly.</p>
+  <div class="callout warn">
+    <div class="callout-label">⚠ Your golden rules</div>
+    <p><b>Never</b> share your seed phrase with anyone, for any reason.</p>
+    <p><b>Never</b> share your private key with anyone, for any reason.</p>
+    <p>No legitimate team, support agent, admin or "helper" will ever genuinely need either of these.</p>
+  </div>
+  <p class="body-text">A few more essential habits:</p>
+  <ul class="list">
+    <li>Be careful of fake websites that copy real platforms almost exactly.</li>
+    <li>Always verify a wallet address before sending funds — even a single wrong character sends funds to the wrong place, permanently.</li>
+    <li>Always verify the network before sending, to avoid lost funds.</li>
+    <li>Be cautious of unexpected "free airdrop" offers.</li>
+    <li>Be alert to impersonators pretending to be admins, support staff, or even people you know.</li>
+    <li>Don't blindly connect your wallet to random websites.</li>
+    <li>Read carefully before approving any transaction — understand exactly what you're signing.</li>
+    <li>If something sounds too good to be true, it almost always is.</li>
+    <li>Never send money because someone is pressuring or rushing you.</li>
+    <li>Only use official websites and verified links — bookmark the ones you trust.</li>
+  </ul>
+  ${footerBrand()}
+</div>`});
+
+pages.push({type:'content', navTitle:'Common Scams To Know', section:'Section 7 — Crypto Safety', html:`
+<div class="page">
+  <div class="chapter-num">Chapter</div>
+  <h1 class="title">Common Scams To Know</h1>
+  <p class="lede">Scammers in crypto are creative — but most scams fall into a few repeating patterns. Learn to recognize these:</p>
+  <ul class="list">
+    <li><b>Phishing</b> — fake links or messages designed to trick you into entering your seed phrase or private key.</li>
+    <li><b>Fake support accounts</b> — impersonators posing as official help, usually reaching out to you first.</li>
+    <li><b>Fake giveaways</b> — "send 1 to receive 2 back" style scams that never pay out.</li>
+    <li><b>Rug pulls</b> — project creators abandon a token and drain its liquidity, leaving holders with worthless tokens.</li>
+    <li><b>Honeypots</b> — tokens designed so people can buy but can never sell.</li>
+    <li><b>Fake tokens</b> — copycat tokens using a popular name or logo to confuse buyers.</li>
+    <li><b>Fake airdrops</b> — offers that ask you to "connect and approve" in ways that drain your wallet.</li>
+    <li><b>Wallet-draining websites</b> — sites designed purely to trick you into approving a transaction that empties your wallet.</li>
+    <li><b>Impersonation scams</b> — someone pretending to be a known creator, coach or admin to gain your trust.</li>
+  </ul>
+  <div class="callout tip">
+    <div class="callout-label">💡 The simple defense</div>
+    <p>Slow down. Verify everything. If you feel rushed or pressured, that pressure is itself a red flag.</p>
+  </div>
+  ${footerBrand()}
+</div>`});
+
+/* ---- SECTION 8 divider ---- */
+pages.push({type:'content', navTitle:'Section 8', section:'Section 8 — Understanding the Market', html:
+  divider('08','SECTION 8','Understanding the Market','Why a token\'s price alone tells you almost nothing.')});
+
+pages.push({type:'content', navTitle:'Market Basics', section:'Section 8 — Understanding the Market', html:`
+<div class="page">
+  <div class="chapter-num">Chapter</div>
+  <h1 class="title">Understanding the Market</h1>
+  <p class="lede">A very common beginner mistake is judging a token by its price alone. A "cheap" price doesn't automatically mean a token is a good deal.</p>
+  <div class="analogy">Example: Token A costs $0.0001 with 500 trillion coins in circulation. Token B costs $50 with 2 million coins in circulation.<br><br>Token A's market cap: $0.0001 × 500,000,000,000 = <b>$50,000,000</b><br>Token B's market cap: $50 × 2,000,000 = <b>$100,000,000</b><br><br>Even though Token A "costs" far less per coin, it's actually worth less overall than Token B.</div>
+  <p class="body-text">Other basic market ideas worth knowing:</p>
+  <ul class="list">
+    <li><b>Circulating supply</b> — coins currently available and trading in the market.</li>
+    <li><b>Total supply</b> — all coins created so far, including any not yet in circulation.</li>
+    <li><b>Maximum supply</b> — the absolute cap on how many coins can ever exist (if one is set).</li>
+    <li><b>Volume</b> — how much of the asset is being traded, usually measured over 24 hours.</li>
+    <li><b>Demand and supply</b> — the basic force behind almost every price movement: more buyers than sellers pushes price up, and vice versa.</li>
+  </ul>
+  <p class="body-text">Always look at market cap, supply and liquidity together — not price alone — before forming an opinion about a token.</p>
+  ${footerBrand()}
+</div>`});
+
+/* ---- SECTION 9 divider ---- */
+pages.push({type:'content', navTitle:'Section 9', section:'Section 9 — Bull & Bear Markets', html:
+  divider('09','SECTION 9','Bull & Bear Markets','Crypto moves in cycles. Understanding them helps you stay calm.')});
+
+pages.push({type:'content', navTitle:'Bull and Bear Markets', section:'Section 9 — Bull & Bear Markets', html:`
+<div class="page">
+  <div class="chapter-num">Chapter</div>
+  <h1 class="title">Bull and Bear Markets</h1>
+  <p class="body-text">Crypto markets move in broad cycles, generally described using two terms:</p>
+  <ul class="list">
+    <li><b>Bull market</b> — a period where prices are broadly rising and confidence is high.</li>
+    <li><b>Bear market</b> — a period where prices are broadly falling and confidence is low.</li>
+  </ul>
+  <p class="body-text">Within these cycles, you'll also hear terms like:</p>
+  <ul class="list">
+    <li><b>Corrections</b> — short, sharp price drops within a larger trend.</li>
+    <li><b>Dips</b> — temporary price decreases.</li>
+    <li><b>Pumps</b> — sudden, fast price increases.</li>
+    <li><b>Crashes</b> — severe, rapid price collapses.</li>
+  </ul>
+  <div class="callout tip">
+    <div class="callout-label">💡 Stay calm</div>
+    <p>Crypto is known for being highly volatile. Price swings — even large ones — are a normal part of how this market behaves, not necessarily a sign that something is wrong.</p>
+  </div>
+  <div class="callout warn">
+    <div class="callout-label">⚠ About "buying the dip"</div>
+    <p>"Buy the dip" is popular advice, but it isn't automatically good advice. An asset that has dropped in price can keep dropping further. Never assume a lower price automatically means a good buying opportunity.</p>
+  </div>
+  ${footerBrand()}
+</div>`});
+
+/* ---- SECTION 10 divider ---- */
+pages.push({type:'content', navTitle:'Section 10', section:'Section 10 — Mindset', html:
+  divider('10','SECTION 10','The Beginner\'s Mindset','The habits that matter more than any single trade.')});
+
+pages.push({type:'content', navTitle:'The Beginner\'s Crypto Mindset', section:'Section 10 — Mindset', html:`
+<div class="page">
+  <div class="chapter-num">Chapter</div>
+  <h1 class="title">The Beginner's Crypto Mindset</h1>
+  <p class="lede">Before we move to what's next, let's talk about mindset — because how you think matters more than any single trade you'll ever make.</p>
+  <ul class="list">
+    <li><b>Learn before investing.</b> Understanding always comes before risking money.</li>
+    <li><b>Never invest money you cannot afford to lose.</b> Crypto is volatile — treat it accordingly.</li>
+    <li><b>Don't chase every coin.</b> Missing one opportunity is not the end of the world.</li>
+    <li><b>Don't follow influencers blindly.</b> Always think for yourself and verify claims.</li>
+    <li><b>Don't confuse luck with skill.</b> One good trade doesn't mean you've mastered the market.</li>
+    <li><b>Don't let FOMO control your decisions.</b> Fear of missing out leads to poor timing.</li>
+    <li><b>Verify information</b> before acting on it — this is DYOR in practice.</li>
+    <li><b>Keep learning.</b> The crypto space evolves constantly.</li>
+    <li><b>Start small when appropriate</b> — you can always grow into larger amounts as your understanding grows.</li>
+    <li><b>Security comes before profit.</b> Protecting what you have matters more than chasing more.</li>
+  </ul>
+  <p class="body-text">It also helps to clearly separate these four different activities, since people often confuse them:</p>
+  <ul class="list">
+    <li><b>Learning</b> — building understanding, with no money at risk.</li>
+    <li><b>Investing</b> — putting money in with a longer-term view.</li>
+    <li><b>Trading</b> — actively buying and selling to profit from price movement.</li>
+    <li><b>Speculating</b> — taking a high-risk bet, often with little research behind it.</li>
+  </ul>
+  ${footerBrand()}
+</div>`});
+
+/* ---- SECTION 11 divider ---- */
+pages.push({type:'content', navTitle:'Section 11', section:'Section 11 — What\'s Next', html:
+  divider('11','SECTION 11','What You\'ll Learn Next','You\'ve built the foundation. Here\'s where the video lessons take you from here.')});
+
+pages.push({type:'content', navTitle:'What You\'ll Learn Next', section:'Section 11 — What\'s Next', html:`
+<div class="page">
+  <div class="chapter-num">Coming up</div>
+  <h1 class="title">What You'll Learn Next</h1>
+  <p class="lede">You've now built a strong foundation. From here, the upcoming video lessons will go deeper into practical, hands-on topics, including:</p>
+  <ol class="list">
+    <li>Setting up a crypto wallet</li>
+    <li>Understanding wallet addresses</li>
+    <li>Understanding networks</li>
+    <li>Buying crypto</li>
+    <li>Sending and receiving crypto</li>
+    <li>Using centralized exchanges</li>
+    <li>Using decentralized exchanges</li>
+    <li>Swapping tokens</li>
+    <li>Reading crypto charts</li>
+    <li>Understanding market cap and liquidity</li>
+    <li>Finding tokens</li>
+    <li>Meme-token basics</li>
+    <li>DeFi</li>
+    <li>Liquidity provision</li>
+    <li>Staking</li>
+    <li>Crypto security</li>
+    <li>Risk management</li>
+    <li>Other advanced topics</li>
+  </ol>
+  <p class="body-text">The videos will go much deeper and show real, practical demonstrations of everything we've introduced here. You're already ahead of where you started — well done for making it this far.</p>
+  ${footerBrand()}
+</div>`});
+
+/* ---- Checklist ---- */
+const checklistTerms = [
+ 'What is cryptocurrency?','What is Bitcoin?','What is blockchain?','What is a wallet?',
+ 'What is a seed phrase?','What is a network?','What is a token?','What is a coin?',
+ 'What is gas?','What is a CEX?','What is a DEX?','What is liquidity?',
+ 'What is market cap?','What is a stablecoin?','What is DeFi?','What is a meme token?',
+ 'What is slippage?','What is a smart contract?','What is FOMO?','What is DYOR?',
+ 'What is a rug pull?','What is a private key?','What is a public address?','What is HODL?',
+ 'What is a liquidity pool?','What is staking?','What is APY?','What is an airdrop?',
+ 'What is volatility?','What is an ATH?','What is an ATL?','What is a bull market?',
+ 'What is a bear market?','What is P2P?','What is a trading pair?','What is a limit order?',
+ 'What is DCA?','What is TVL?','What is an altcoin?','What is a transaction hash?'
+];
+pages.push({type:'checklist', navTitle:'Beginner Checklist', section:'Checklist', html:`
+<div class="page">
+  <div class="kicker">Final check-in</div>
+  <h1 class="title">Beginner Checklist</h1>
+  <p class="lede">Before you move to the video lessons, see how comfortable you feel with these ideas.</p>
+  <div class="checklist-progress" id="checklistProgress">0 of ${checklistTerms.length} checked</div>
+  <div id="checklistWrap">${checklistTerms.map(checkItem).join('')}</div>
+  <div class="callout tip">
+    <div class="callout-label">💡 Remember</div>
+    <p>If you can't confidently check some of these yet, don't worry. Go back to the relevant section. The goal is <b>understanding</b>, not memorization.</p>
+  </div>
+  ${footerBrand()}
+</div>`});
+
+/* ---- Closing ---- */
+pages.push({type:'content', navTitle:'You\'re Ready', section:'Finish', html:`
+<div class="page divider-page">
+  <div class="divider-tag">YOU MADE IT</div>
+  <div class="divider-num" style="font-size:44px;">✓</div>
+  <h2 class="divider-title">You've Built Your Foundation</h2>
+  <p class="divider-sub">You now understand the language of crypto — enough to follow along confidently once the video lessons begin. Keep this ebook close; come back to the dictionary any time a term slips your mind.</p>
+  <div class="cover-divider" style="margin-top:34px;"></div>
+  <div class="cover-brand">AsaoluInfotech</div>
+  <div class="cover-role">Crypto Coach · Analyst · Strategist</div>
+</div>`});
+
+/* ============ RENDER ENGINE ============ */
+let current = 0;
+const container = document.getElementById('pageContainer');
+const mainEl = document.getElementById('main');
+const progressFill = document.getElementById('progressFill');
+const navCount = document.getElementById('navCount');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+
+function render(idx){
+  current = idx;
+  const p = pages[idx];
+  container.innerHTML = p.html;
+  // reset scroll
+  mainEl.scrollTop = 0;
+  const pct = Math.round(((idx) / (pages.length-1)) * 100);
+  progressFill.style.width = pct + '%';
+  navCount.textContent = (idx+1) + ' / ' + pages.length;
+  prevBtn.disabled = idx === 0;
+  nextBtn.textContent = idx === pages.length-1 ? 'Finish' : 'Next →';
+  nextBtn.disabled = idx === pages.length-1;
+  updateActiveDrawerItem();
+  if(document.getElementById('coverStart')){
+    document.getElementById('coverStart').addEventListener('click', ()=>goTo(current+1));
+  }
+  if(p.type === 'checklist'){
+    setupChecklist();
+  }
+}
+
+function goTo(idx){
+  if(idx < 0 || idx >= pages.length) return;
+  render(idx);
+}
+
+prevBtn.addEventListener('click', ()=>goTo(current-1));
+nextBtn.addEventListener('click', ()=>goTo(current+1));
+
+document.addEventListener('keydown', (e)=>{
+  if(e.key === 'ArrowRight') goTo(current+1);
+  if(e.key === 'ArrowLeft') goTo(current-1);
+});
+
+/* ---- Checklist logic with localStorage ---- */
+function setupChecklist(){
+  const wrap = document.getElementById('checklistWrap');
+  if(!wrap) return;
+  const items = wrap.querySelectorAll('.checklist-item');
+  let saved = {};
+  try{ saved = JSON.parse(localStorage.getItem('cfb_checklist')||'{}'); }catch(e){ saved = {}; }
+  items.forEach((el,i)=>{
+    if(saved[i]) el.classList.add('checked');
+    el.addEventListener('click', ()=>{
+      el.classList.toggle('checked');
+      saved[i] = el.classList.contains('checked');
+      try{ localStorage.setItem('cfb_checklist', JSON.stringify(saved)); }catch(e){}
+      updateChecklistProgress();
+    });
+  });
+  updateChecklistProgress();
+}
+function updateChecklistProgress(){
+  const wrap = document.getElementById('checklistWrap');
+  const label = document.getElementById('checklistProgress');
+  if(!wrap || !label) return;
+  const total = wrap.querySelectorAll('.checklist-item').length;
+  const checked = wrap.querySelectorAll('.checklist-item.checked').length;
+  label.textContent = checked + ' of ' + total + ' checked';
+}
+
+/* ---- TOC Drawer ---- */
+const drawer = document.getElementById('drawer');
+const scrim = document.getElementById('scrim');
+const drawerList = document.getElementById('drawerList');
+const menuBtn = document.getElementById('menuBtn');
+const drawerClose = document.getElementById('drawerClose');
+
+function buildDrawer(){
+  let lastSection = null;
+  let html = '';
+  pages.forEach((p,i)=>{
+    if(p.section !== lastSection){
+      html += `<div class="drawer-section-label">${p.section}</div>`;
+      lastSection = p.section;
+    }
+    html += `<button class="drawer-item" data-idx="${i}">${p.navTitle}</button>`;
+  });
+  drawerList.innerHTML = html;
+  drawerList.querySelectorAll('.drawer-item').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      goTo(parseInt(btn.dataset.idx,10));
+      closeDrawer();
+    });
+  });
+}
+function updateActiveDrawerItem(){
+  drawerList.querySelectorAll('.drawer-item').forEach(btn=>{
+    btn.classList.toggle('active', parseInt(btn.dataset.idx,10) === current);
+  });
+}
+function openDrawer(){ drawer.classList.add('open'); scrim.classList.add('open'); }
+function closeDrawer(){ drawer.classList.remove('open'); scrim.classList.remove('open'); }
+menuBtn.addEventListener('click', openDrawer);
+drawerClose.addEventListener('click', closeDrawer);
+scrim.addEventListener('click', closeDrawer);
+
+/* ---- init ---- */
+buildDrawer();
+render(0);
+</script>
+</body>
+</html>
